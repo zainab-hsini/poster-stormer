@@ -15,15 +15,15 @@ function App() {
     setInputValue(value);
   };
 
-  const handleGenerate = async () => {
-    const FAL_KEY = process.env.REACT_APP_FAL_KEY;
+  const handleGenerate = async () => { //This section calls the flux API to generate the poster
+    const FAL_KEY = process.env.REACT_APP_FAL_KEY; //this section is to get the API key from the .env file
     console.log("handling generation")
     fal.config({
       credentials: FAL_KEY
     });
-    const result = await fal.subscribe("fal-ai/flux/dev", {
+    const result = await fal.subscribe("fal-ai/flux/dev", { //This is the request to the flux API
       input: {
-        "prompt": inputValue,
+        "prompt": inputValue, //Input value is currently taken from what the user inputs on the website
         "num_images": 1,
         "image_size": "portrait_4_3"
       },
