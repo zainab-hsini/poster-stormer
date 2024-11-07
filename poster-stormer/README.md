@@ -1,70 +1,184 @@
-# Getting Started with Create React App
+# Poster Stormer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Poster Stormer** is a web application that generates movie posters based on user-input prompts and additional features. The app is designed with React, showcasing a user-friendly interface where users can select genres, decades, and styles for poster generation.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [Poster Stormer](#poster-stormer)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Running the App](#running-the-app)
+  - [How to Use](#how-to-use)
+  - [Components](#components)
+    - [App.js](#appjs)
+    - [PromptInput](#promptinput)
+    - [AdditionalOptions](#additionaloptions)
+    - [PosterDisplay](#posterdisplay)
+  - [Mock Data](#mock-data)
+    - [Example Mock Poster Data](#example-mock-poster-data)
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Ensure you have the following installed:
 
-### `npm test`
+- [Node.js](https://nodejs.org/) (version 14 or later)
+- [npm](https://www.npmjs.com/) (Node package manager, comes with Node.js)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `npm run build`
+1. Clone the repository:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```bash
+   git clone https://github.com/yourusername/poster-stormer.git
+   cd poster-stormer
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install the dependencies:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```bash
+   npm install
+   ```
 
-### `npm run eject`
+### Running the App
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+To start the app in development mode, run:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+This command will start the development server, and you can view the app in your browser at `http://localhost:3000`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+To build the app for production, run:
 
-## Learn More
+```bash
+npm run build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This will create an optimized production build in the `build` folder.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## How to Use
 
-### Code Splitting
+1. **Input a Prompt**: In the `PromptInput` section, type your movie prompt that will inspire the poster generation.
+2. **Select Additional Options**: Expand the options to choose:
+   - **Genre**: Select a genre from the dropdown menu.
+   - **Decade**: Specify the decade for the poster style (e.g., 1980s).
+   - **Number of Posters**: Choose how many posters you want to generate (up to 10).
+   - **Style**: Enter a style (e.g., Retro, Minimalist).
+3. **Generate Posters**: Click the "Generate" button to view the posters based on the selected criteria.
+4. **Navigate Posters**: Use the "Previous" and "Next" buttons to browse through generated posters.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Components
 
-### Analyzing the Bundle Size
+### App.js
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+`App.js` is the main component of the application. It manages the state and structure of the app.
 
-### Making a Progressive Web App
+- **State Variables**:
+  - `numberOfPosters`: Tracks the number of posters requested by the user.
+  - `postersToDisplay`: Holds the array of posters to display, based on the mock data or actual generated posters.
+  - `currentIndex`: Tracks the current poster displayed.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **Functions**:
+  - `handleGenerate`: Slices the `mockPosters` data based on `numberOfPosters` and sets the selected posters in the display.
+  - `handleNext` and `handlePrev`: Navigate through the list of generated posters, updating `currentIndex` as needed.
 
-### Advanced Configuration
+- **Components Used**:
+  - `<PromptInput />`: The text input for movie prompt.
+  - `<AdditionalOptions />`: Displays the genre, decade, and style selectors.
+  - `<PosterDisplay />`: Displays the generated poster along with navigation buttons.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### PromptInput
 
-### Deployment
+Located in `Components/PromptInput.js`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+This component provides a text area for users to type in their movie prompt.
 
-### `npm run build` fails to minify
+- **Description**: 
+  - Renders a text area for prompt input with a placeholder text "Type your movie prompt here."
+  - Includes an "Edit" button for potential additional editing features.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Styling**: Defined in `PromptInput.css`.
+
+### AdditionalOptions
+
+Located in `Components/AdditionalOptions.js`
+
+This component renders additional options for the poster generation, including genre, decade, number of posters, and style.
+
+- **Props**:
+  - `setNumberOfPosters`: Function to update the number of posters requested by the user.
+
+- **Options**:
+  - **Genre**: Dropdown menu with a comprehensive list of genres.
+  - **Decade**: Input field where users can specify a decade (e.g., "1980s").
+  - **Number of Posters**: Numeric input allowing users to select how many posters to generate.
+  - **Style**: Input for specifying a style (e.g., "Retro").
+
+- **Styling**: Defined in `AdditionalOptions.css`.
+
+### PosterDisplay
+
+Located in `Components/PosterDisplay.js`
+
+This component displays the generated posters, allowing navigation between them.
+
+- **Props**:
+  - `poster`: Current poster to display (passed as an object with `image` and `title`).
+  - `onNext` and `onPrev`: Functions to navigate to the next or previous poster.
+  - `canNext` and `canPrev`: Boolean values to enable/disable navigation buttons.
+
+- **Description**:
+  - Shows the poster image and title.
+  - If no posters are generated, displays a placeholder message.
+  - Renders "Previous" and "Next" buttons for navigation.
+
+- **Styling**: Defined in `PosterDisplay.css`.
+
+## Mock Data
+
+Located in `mockData.js`
+
+This file provides sample data for the posters, allowing you to test the app before implementing a real poster generation API.
+
+- **Data Structure**:
+  - Each mock poster has properties:
+    - `id`: Unique identifier for the poster.
+    - `image`: URL or path to the poster image.
+    - `title`: Title of the poster.
+    - `genre`, `decade`, and `style`: Attributes matching user input.
+
+### Example Mock Poster Data
+
+```javascript
+const mockPosters = [
+  {
+    id: 1,
+    image: 'poster1.png',
+    title: 'Sci-Fi Adventure',
+    genre: 'Sci-Fi',
+    decade: '1980s',
+    style: 'Retro',
+  },
+  {
+    id: 2,
+    image: 'poster2.png',
+    title: 'Fantasy Quest',
+    genre: 'Fantasy',
+    decade: '1990s',
+    style: 'Illustrative',
+  },
+  {
+    id: 3,
+    image: 'poster3.png',
+    title: 'Thriller Nights',
+    genre: 'Thriller',
+    decade: '2000s',
+    style: 'Minimalist',
+  },
+];
+```
