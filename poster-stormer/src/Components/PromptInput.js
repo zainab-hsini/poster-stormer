@@ -9,7 +9,7 @@ function PromptInput({onInputChange}) {
     <div className="prompt-input">
       <textarea 
         onChange={handleMovieDescriptionChange}
-        placeholder="Type your movie prompt here" 
+        placeholder="Please Write the Synopsis of Your Movie" 
         rows="5"></textarea>
       <div className="button-container">
         <button>Edit</button>
