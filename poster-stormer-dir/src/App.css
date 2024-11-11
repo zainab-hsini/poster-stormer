@@ -1,0 +1,53 @@
+.app {
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.app-header {
+  background-color: #ccc;
+  padding: 10px;
+  font-size: 24px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.app-content {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  gap: 15px;
+}
+
+.right-section {
+  width: 60%;
+}
+
+button {
+  margin: 5px;
+  padding: 5px 10px;
+}
+.poster-display {
+  text-align: center;
+  margin: 20px;
+}
+
+.poster-placeholder {
+  display: inline-block;
+  margin: 10px;
+}
+
+.navigation {
+  margin-top: 20px;
+}
+
+.navigation button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
