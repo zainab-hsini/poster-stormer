@@ -1,50 +1,33 @@
-import React from 'react';
+import React from "react";
 
 const genres = [
-  "Horror",
   "Action",
-  "Drama",
-  "Thriller",
-  "Science fiction",
-  "Western",
-  "Comedy",
-  "Romance",
-  "Crime film",
-  "Experimental",
+  "Adult",
   "Adventure",
-  "Fantasy",
   "Animation",
+  "Biography",
+  "Comedy",
+  "Crime",
   "Documentary",
-  "Mystery",
-  "Fiction",
-  "Musical",
-  "Romantic comedy",
-  "Noir",
-  "Historical drama",
-  "Historical Fiction",
-  "Children's film",
-  "Television",
-  "Animated film",
-  "Dark comedy",
-  "War",
-  "Historical film",
-  "Music",
-  "Narrative",
-  "Epic",
-  "Exploitation",
+  "Drama",
+  "Family",
+  "Fantasy",
+  "Game-Show",
   "History",
-  "Biographical",
-  "Disaster",
-  "Action comedy",
-  "Magical Realism",
-  "Fairy tale",
-  "Superhero",
-  "Chick flick",
-  "Prison",
-  "Music genre",
-  "Heist",
-  "Comedy horror",
-  "Art"
+  "Horror",
+  "Music",
+  "Musical",
+  "Mystery",
+  "News",
+  "Reality-TV",
+  "Romance",
+  "Sci-Fi",
+  "Short",
+  "Sport",
+  "Talk-Show",
+  "Thriller",
+  "War",
+  "Western",
 ];
 
 function AdditionalOptions({ setNumberOfPosters }) {
@@ -69,7 +52,12 @@ function AdditionalOptions({ setNumberOfPosters }) {
           </label>
           <label>
             # of posters:
-            <input type="number" min="1" max="10" onChange={(e) => setNumberOfPosters(e.target.value)} />
+            <input
+              type="number"
+              min="1"
+              max="10"
+              onChange={(e) => setNumberOfPosters(e.target.value)}
+            />
           </label>
           <label>
             Style:
