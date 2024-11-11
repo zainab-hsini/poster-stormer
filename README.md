@@ -17,7 +17,6 @@
     - [AdditionalOptions](#additionaloptions)
     - [PosterDisplay](#posterdisplay)
   - [Mock Data](#mock-data)
-    - [Example Mock Poster Data](#example-mock-poster-data)
 
 ## Getting Started
 
@@ -151,34 +150,3 @@ This file provides sample data for the posters, allowing you to test the app bef
     - `image`: URL or path to the poster image.
     - `title`: Title of the poster.
     - `genre`, `decade`, and `style`: Attributes matching user input.
-
-### Example Mock Poster Data
-
-```javascript
-const mockPosters = [
-  {
-    id: 1,
-    image: 'poster1.png',
-    title: 'Sci-Fi Adventure',
-    genre: 'Sci-Fi',
-    decade: '1980s',
-    style: 'Retro',
-  },
-  {
-    id: 2,
-    image: 'poster2.png',
-    title: 'Fantasy Quest',
-    genre: 'Fantasy',
-    decade: '1990s',
-    style: 'Illustrative',
-  },
-  {
-    id: 3,
-    image: 'poster3.png',
-    title: 'Thriller Nights',
-    genre: 'Thriller',
-    decade: '2000s',
-    style: 'Minimalist',
-  },
-];
-```
