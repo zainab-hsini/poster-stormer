@@ -1,0 +1,15 @@
+
+pymongo
+python-dotenv
+pandas
+requests
+fastapi
+uvicorn
+pydantic
+torch 
+torchvision 
+pillow
+transformers
+diffusers
+faiss-cpu 
+sentence-transformers
