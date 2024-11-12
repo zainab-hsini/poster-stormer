@@ -81,11 +81,11 @@ This will create an optimized production build in the `build` folder.
 ## How to Use
 
 1. **Input a Prompt**: In the `PromptInput` section, type a description for your movie plot (i.e., one-paragraph synopsis) to inspire the poster generation.
-2. **Select Additional Options**: 
+2. **Select Additional Options (WiP)**: 
    - **Genre**: Choose a genre from the dropdown menu to filter similar movies by genre.
-   - **Decade**:(WiP) Specify the decade for the poster style (e.g., "1980s").
-   - **Number of Posters**:(WiP) Choose how many posters you want to generate (up to 10).
-   - **Style**:(WiP) Enter a style (e.g., "Retro").
+   - **Decade**: Specify the decade for the poster style (e.g., "1980s").
+   - **Number of Posters**: Choose how many posters you want to generate (up to 10).
+   - **Style**: Enter a style (e.g., "Retro").
 3. **Generate Posters**: Click the "Generate" button to view the poster based on the selected criteria.
 4. **Navigate Posters**: Use the "Previous" and "Next" buttons to browse through the generated posters.
 
