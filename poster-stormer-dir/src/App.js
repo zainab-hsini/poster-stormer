@@ -25,7 +25,7 @@ function App() {
         },
         body: JSON.stringify({
           plot: inputValue,
-          genre: "Horror", //This will be changed later
+          genre: "Sci-Fi", //This will be changed later
         }),
       });
 
