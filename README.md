@@ -1,6 +1,6 @@
 # Poster Stormer
 
-**Poster Stormer** is a web application that generates movie posters based on user-input prompts and additional features. The app is designed with React, showcasing a user-friendly interface where users can select genres, decades, and styles for poster generation.
+**Poster Stormer** is a web application that generates movie posters based on user-input prompts. Using React for the frontend and FastAPI for the backend, the app allows users to specify genres, decades, and styles for poster generation. It dynamically recommends similar movie posters based on the user’s input.
 
 ## Table of Contents
 
@@ -15,8 +15,9 @@
     - [App.js](#appjs)
     - [PromptInput](#promptinput)
     - [AdditionalOptions](#additionaloptions)
-    - [PosterDisplay](#posterdisplay)
-  - [Mock Data](#mock-data)
+  - [Backend API](#backend-api)
+    - [/generate\_prompt](#generate_prompt)
+    - [/get\_available\_genres](#get_available_genres)
 
 ## Getting Started
 
@@ -26,6 +27,7 @@ Ensure you have the following installed:
 
 - [Node.js](https://nodejs.org/) (version 14 or later)
 - [npm](https://www.npmjs.com/) (Node package manager, comes with Node.js)
+- [Python](https://www.python.org/) (version 3.8 or later)
 
 ### Installation
 
@@ -36,40 +38,56 @@ Ensure you have the following installed:
    cd poster-stormer
    ```
 
-2. Install the dependencies:
+2. Install the frontend dependencies:
 
    ```bash
    npm install
    ```
 
+3. Install the backend dependencies:
+
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   ```
+
+4. Set up environment variables:
+   - For the backend, add a `.env` file in the `backend` folder with the following variables:
+     ```plaintext
+     Mongo_URI=<Your MongoDB connection string>
+     ```
+   - For the frontend, add a `.env` file in the root directory with the following:
+     ```plaintext
+     REACT_APP_FAL_KEY=<Your FAL API key>
+     ```
+
 ### Running the App
 
-To start the app in development mode, run:
+1. Start the backend server:
+   ```bash
+   cd backend/embeddingsFetch.py
+   uvicorn backend.embeddingsFetch:app --reload
+   ```
+   The backend server will start at `http://127.0.0.1:8000`.
 
-```bash
-npm start
-```
-
-This command will start the development server, and you can view the app in your browser at `http://localhost:3000`.
-
-To build the app for production, run:
-
-```bash
-npm run build
-```
+2. Start the frontend server:
+   ```bash
+   npm start
+   ```
+   This command will start the React development server, and you can view the app in your browser at `http://localhost:3000`.
 
 This will create an optimized production build in the `build` folder.
 
 ## How to Use
 
-1. **Input a Prompt**: In the `PromptInput` section, type your movie prompt that will inspire the poster generation.
-2. **Select Additional Options**: Expand the options to choose:
-   - **Genre**: Select a genre from the dropdown menu.
-   - **Decade**: Specify the decade for the poster style (e.g., 1980s).
-   - **Number of Posters**: Choose how many posters you want to generate (up to 10).
-   - **Style**: Enter a style (e.g., Retro, Minimalist).
-3. **Generate Posters**: Click the "Generate" button to view the posters based on the selected criteria.
-4. **Navigate Posters**: Use the "Previous" and "Next" buttons to browse through generated posters.
+1. **Input a Prompt**: In the `PromptInput` section, type a description for your movie plot (i.e., one-paragraph synopsis) to inspire the poster generation.
+2. **Select Additional Options**: 
+   - **Genre**: Choose a genre from the dropdown menu to filter similar movies by genre.
+   - **Decade**:(WiP) Specify the decade for the poster style (e.g., "1980s").
+   - **Number of Posters**:(WiP) Choose how many posters you want to generate (up to 10).
+   - **Style**:(WiP) Enter a style (e.g., "Retro").
+3. **Generate Posters**: Click the "Generate" button to view the poster based on the selected criteria.
+4. **Navigate Posters**: Use the "Previous" and "Next" buttons to browse through the generated posters.
 
 ## Components
 
@@ -79,17 +97,18 @@ This will create an optimized production build in the `build` folder.
 
 - **State Variables**:
   - `numberOfPosters`: Tracks the number of posters requested by the user.
-  - `postersToDisplay`: Holds the array of posters to display, based on the mock data or actual generated posters.
+  - `postersToDisplay`: Holds the array of generated posters.
   - `currentIndex`: Tracks the current poster displayed.
+  - `inputValue`: Stores the user’s input for the movie plot.
 
 - **Functions**:
-  - `handleGenerate`: Slices the `mockPosters` data based on `numberOfPosters` and sets the selected posters in the display.
-  - `handleNext` and `handlePrev`: Navigate through the list of generated posters, updating `currentIndex` as needed.
+  - `handleGenerate`: Calls the backend `/generate_prompt` endpoint, then uses the Flux API to generate the poster based on the returned prompt.
+  - `handleNext` and `handlePrev`: Navigate through the list of generated posters, updating `currentIndex`.
 
 - **Components Used**:
-  - `<PromptInput />`: The text input for movie prompt.
+  - `<PromptInput />`: The text input for the movie plot.
   - `<AdditionalOptions />`: Displays the genre, decade, and style selectors.
-  - `<PosterDisplay />`: Displays the generated poster along with navigation buttons.
+  - `<PosterDisplay />`: Displays the generated poster with navigation buttons.
 
 ### PromptInput
 
@@ -107,46 +126,60 @@ This component provides a text area for users to type in their movie prompt.
 
 Located in `Components/AdditionalOptions.js`
 
-This component renders additional options for the poster generation, including genre, decade, number of posters, and style.
+This component renders additional options for poster generation, including genre, decade, number of posters, and style.
 
 - **Props**:
   - `setNumberOfPosters`: Function to update the number of posters requested by the user.
 
 - **Options**:
-  - **Genre**: Dropdown menu with a comprehensive list of genres.
-  - **Decade**: Input field where users can specify a decade (e.g., "1980s").
+  - **Genre**: Dropdown menu with a list of genres.
+  - **Decade**: Input field where users can specify a decade.
   - **Number of Posters**: Numeric input allowing users to select how many posters to generate.
-  - **Style**: Input for specifying a style (e.g., "Retro").
+  - **Style**: Input for specifying a style.
 
 - **Styling**: Defined in `AdditionalOptions.css`.
 
-### PosterDisplay
+## Backend API
 
-Located in `Components/PosterDisplay.js`
+The backend is powered by FastAPI and includes endpoints to generate prompts based on user input and retrieve available genres.
 
-This component displays the generated posters, allowing navigation between them.
+### /generate_prompt
 
-- **Props**:
-  - `poster`: Current poster to display (passed as an object with `image` and `title`).
-  - `onNext` and `onPrev`: Functions to navigate to the next or previous poster.
-  - `canNext` and `canPrev`: Boolean values to enable/disable navigation buttons.
+- **Method**: `POST`
+- **Endpoint**: `/generate_prompt`
+- **Description**: Generates a prompt based on the user's plot description and selected genre.
+- **Request Body**:
+  ```json
+  {
+    "plot": "A thrilling sci-fi adventure in space.",
+    "genre": "Sci-Fi"
+  }
+  ```
+- **Response**:
+  - Returns the top 5 most similar movies to the plot, based on their embedding similarity, along with a prompt for generating a poster via the Flux API.
+  ```json
+  {
+    "imdbIDs": ["tt1234567", "tt2345678", "tt3456789", "tt4567890", "tt5678901"],
+    "movieTitles": ["Movie 1", "Movie 2", "Movie 3", "Movie 4", "Movie 5"],
+    "prompt": "Create a poster for a movie with this plot: A thrilling sci-fi adventure in space. The top 5 closest movies are Movie 1, Movie 2, Movie 3, Movie 4, Movie 5."
+  }
+  ```
 
-- **Description**:
-  - Shows the poster image and title.
-  - If no posters are generated, displays a placeholder message.
-  - Renders "Previous" and "Next" buttons for navigation.
+### /get_available_genres
 
-- **Styling**: Defined in `PosterDisplay.css`.
-
-## Mock Data
-
-Located in `mockData.js`
-
-This file provides sample data for the posters, allowing you to test the app before implementing a real poster generation API.
-
-- **Data Structure**:
-  - Each mock poster has properties:
-    - `id`: Unique identifier for the poster.
-    - `image`: URL or path to the poster image.
-    - `title`: Title of the poster.
-    - `genre`, `decade`, and `style`: Attributes matching user input.
+- **Method**: `GET`
+- **Endpoint**: `/get_available_genres`
+- **Description**: Retrieves all unique genres available in the `movieEmbeddings` collection.
+- **Response**:
+  - Returns a list of unique genres, such as:
+    ```json
+    [
+      "Action",
+      "Comedy",
+      "Drama",
+      "Fantasy",
+      "Horror",
+      "Romance",
+      "Thriller"
+    ]
+    ```

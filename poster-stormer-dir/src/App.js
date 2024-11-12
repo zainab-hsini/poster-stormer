@@ -25,7 +25,7 @@ function App() {
         },
         body: JSON.stringify({
           plot: inputValue,
-          genre: "Sci-Fi", // Hardcoded for now but will be changed later to take in additional input --> will be framework for other additional filters
+          genre: "Sci-Fi", // Hardcoded for now but will be changed later to take in additional input --> should be framework for other additional filters
         }),
       });
 
