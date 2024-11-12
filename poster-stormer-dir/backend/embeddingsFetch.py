@@ -3,8 +3,9 @@ import os
 import faiss
 import numpy as np
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import pymongo
+from pymongo import MongoClient
 from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 from typing import List, Optional
@@ -12,10 +13,18 @@ import certifi
 
 load_dotenv() 
 app = FastAPI()
+# Set up CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Adjust origins as needed
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 mongodb_uri = os.getenv('Mongo_URI') #retrieve mongodb uri from .env file
 
 try:
-    db_client = pymongo.MongoClient(mongodb_uri, tlsCAFile=certifi.where()) 
+    db_client = MongoClient(mongodb_uri, tlsCAFile=certifi.where()) 
     db = db_client.get_database("movies") 
     movieDetails = db.get_collection("movieDetails")
     db_client.server_info() 
@@ -27,7 +36,7 @@ try:
     movieEmbeddings = db.get_collection("movieEmbeddings")
     print("Connected successfully to the 'Movie Embeddings' database!")
     
-except pymongo.errors.ConnectionFailure as e:
+except Exception as e:
     print(f"Could not connect to MongoDB: {e}")
     exit(1)
 
@@ -48,6 +57,8 @@ class MovieQuery(BaseModel):
 # Endpoint to find similar movies
 @app.post("/generate_prompt")
 async def generate_prompt(query: MovieQuery):
+    print("Received request:", query)
+    print()
     plot_embedding = embedding_model.encode(query.plot).astype("float32")
     
     # Filter embeddings by genre if genre is provided
@@ -82,7 +93,7 @@ async def generate_prompt(query: MovieQuery):
     
     # Create prompt for Flux API
     prompt = f"Create a poster for a movie with this plot: {query.plot}. The top 5 closest movies are {', '.join(movie_titles)}. Generate a poster that is as close to the posters for these movies."
-    
+    print(f"Engineered prompt for image generating: {prompt}")
     return {"imdbIDs": top_n_ids, "movieTitles": movie_titles, "prompt": prompt}
     
 @app.get("/get_available_genres")
