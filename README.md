@@ -87,7 +87,7 @@ This will create an optimized production build in the `build` folder.
    - **Number of Posters**: Choose how many posters you want to generate (up to 10).
    - **Style**: Enter a style (e.g., "Retro").
 3. **Generate Posters**: Click the "Generate" button to view the poster based on the selected criteria.
-4. **Navigate Posters**: Use the "Previous" and "Next" buttons to browse through the generated posters.
+4. **Navigate Posters (WiP)**: Use the "Previous" and "Next" buttons to browse through the generated posters.
 
 ## Components
 
