@@ -11,6 +11,10 @@
     - [Installation](#installation)
     - [Running the App](#running-the-app)
   - [How to Use](#how-to-use)
+  - [Design Choices](#design-choices)
+    - [App Purpose and Functionality](#app-purpose-and-functionality)
+    - [User Interface Layout](#user-interface-layout)
+    - [Design Choices Justification](#design-choices-justification)
   - [Components](#components)
     - [App.js](#appjs)
     - [PromptInput](#promptinput)
@@ -18,6 +22,7 @@
   - [Backend API](#backend-api)
     - [/generate\_prompt](#generate_prompt)
     - [/get\_available\_genres](#get_available_genres)
+  - [Use of AI](#use-of-ai)  
 
 ## Getting Started
 
@@ -34,7 +39,7 @@ Ensure you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/poster-stormer.git
+   git clone https://github.com/zainab-hsini/poster-stormer.git
    cd poster-stormer
    ```
 
@@ -88,6 +93,28 @@ This will create an optimized production build in the `build` folder.
    - **Style**: Enter a style (e.g., "Retro").
 3. **Generate Posters**: Click the "Generate" button to view the poster based on the selected criteria.
 4. **Navigate Posters (WiP)**: Use the "Previous" and "Next" buttons to browse through the generated posters.
+
+## Design Choices
+
+### App Purpose and Functionality
+
+- **Primary Purpose**: The app enables users to generate movie posters based on a brief movie plot description.
+- **Additional Features**: Users can expand the interface to add specific indicators like genre, style, and decade for a more customized poster generation experience.
+
+### User Interface Layout
+
+- **Simple Plot Input (Left Panel)**: The primary input area where users type their movie plot. This minimal design choice focuses on simplicity, allowing users to directly enter the plot idea without distraction. There is also the option to edit the prompt for ease of use.
+- **Advanced Options Dropdown**: Users have the option to expand for additional features, keeping the interface clean and npt overwhelming for basic use but allowing advanced customization for users who want more control over the output.
+  - **Genre (Dropdown)**: Users can select a genre for the poster, offering genre-specific aesthetic influences on the poster's design. A dropdown allows the app to be more precise in the output as it gives the product more control.
+  - **Number of Posters**: Allows users to specify how many posters they’d like generated, adding flexibility for those who want multiple options to compare.
+  - **Decade**: Helps users set a time period, allowing the poster style to reflect the visual trends of a particular era.
+  - **Style**: Provides an additional stylistic indicator, possibly to reflect a specific art style (e.g., minimalism, realism).
+
+### Design Choices Justification
+
+- **Expandable Advanced Options**: Keeps the main interface uncluttered, making it user-friendly for those who want a straightforward experience while still accommodating advanced customization.
+- **Two-Panel Layout**: Separating input and output into distinct panels helps users intuitively understand where to start (left panel) and where to look for results (right panel).
+- **Consistent Grayscale Scheme in Wireframe**: For the wireframe, this choice maintains focus on layout and functionality rather than aesthetic color choices, ensuring clarity in the structure and information flow.
 
 ## Components
 
@@ -183,3 +210,10 @@ The backend is powered by FastAPI and includes endpoints to generate prompts bas
       "Thriller"
     ]
     ```
+## Use of AI
+Throughout development, we utilized ChatGPT to assist with:
+
+Writing and explaining JavaScript functions.
+Structuring components and organizing the code for readability.
+Error handling when fetching data from the API and generating user feedback messages.
+All AI-generated code snippets were reviewed, modified, and understood before incorporation.
