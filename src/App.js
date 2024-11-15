@@ -30,7 +30,6 @@ function App() {
       });
 
       if (!response.ok) throw new Error("failed to get poster description");
-
       const result = await response.json();
       return result
     } catch (error) {
