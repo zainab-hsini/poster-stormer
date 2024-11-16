@@ -28,7 +28,7 @@ function App() {
           title: "The Marionette",
           plot: "In a technologically advanced future, a cybernetically enhanced operative leads a covert task force dedicated to stopping cyberterrorism. As she hunts a mysterious hacker capable of breaching the minds of cyborgs, she begins to uncover unsettling truths about her own past and the nature of her existence. The lines between human and machine blur as she grapples with identity, free will, and the ethics of artificial intelligence.",
           genre: "Sci-Fi",
-          style: "Illustration (Animated)",
+          style: "3D Digital Art",
           isRetro: false
         }),
       });
