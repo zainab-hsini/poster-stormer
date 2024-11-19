@@ -1,6 +1,7 @@
 .app {
   font-family: Arial, sans-serif;
   color: #333;
+  position: relative; /* Added to ensure positioning of elements */
 }
 
 .app-header {
@@ -32,6 +33,7 @@ button {
   margin: 5px;
   padding: 5px 10px;
 }
+
 .poster-display {
   text-align: center;
   margin: 20px;
@@ -51,3 +53,26 @@ button {
   padding: 10px 20px;
   cursor: pointer;
 }
+
+.progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.progress-bar {
+  width: 100%; /* This could be dynamically adjusted based on progress */
+  height: 100%;
+  background-color: #4caf50;
+  animation: progress-bar-animation 3s infinite;
+}
+
+@keyframes progress-bar-animation {
+  0% { width: 0%; }
+  50% { width: 50%; }
+  100% { width: 100%; }
+}
+
+
