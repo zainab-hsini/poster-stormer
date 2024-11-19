@@ -160,12 +160,14 @@ async def generate_prompt(query: MovieQuery):
     
     # Create description using the top movies
     top_movies_description = ""
+    top_movies_dict = {}
     for imdbID, details in titles_and_directors.items():
         title = details.get("title", "unknown title")
         director = details.get("director", "unknown director")
         if top_movies_description:
             top_movies_description += ", "
         top_movies_description += f"{title} by {director}"
+        top_movies_dict[title] = director
     
     # Create prompt for Flux API
     if query.style == "Illustration (Animated)":
@@ -181,7 +183,7 @@ async def generate_prompt(query: MovieQuery):
     
     print(f"Generated Prompt: {prompt}")
     
-    return {"imdbIDs": top_n_ids, "movieTitles": [details["title"] for details in titles_and_directors.values()], "prompt": prompt}
+    return {"imdbIDs": top_n_ids, "movieTitles": top_movies_dict, "prompt": prompt}
     
     
 @app.get("/get_available_genres")
