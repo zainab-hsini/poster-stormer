@@ -10,7 +10,6 @@ from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 from typing import List, Optional
 import certifi
-<<<<<<< HEAD
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
@@ -19,8 +18,6 @@ import logging
 You fire it up by running 
 uvicorn backend.embeddingsFetch:app --reload
 '''
-=======
->>>>>>> b370641b652984d227591c9d5c56386b922f2c9c
 
 load_dotenv() 
 app = FastAPI()
@@ -96,7 +93,6 @@ async def generate_prompt(query: MovieQuery):
     _, indices = faiss_index.search(np.expand_dims(plot_embedding, axis=0), 5)
     top_n_ids = [filtered_imdb_ids[i] for i in indices[0]]
     
-<<<<<<< HEAD
     # Fetch movie titles and directors
     titles_and_directors = {}
     movies_cursor = movieDetails.find({"imdbID": {"$in": top_n_ids}}, {"title": 1, "director": 1, "imdbID": 1})
@@ -134,18 +130,6 @@ async def generate_prompt(query: MovieQuery):
     
     return {"imdbIDs": top_n_ids, "movieTitles": top_movies_dict, "prompt": prompt}
     
-=======
-    # Fetch movie titles
-    movie_titles = []
-    movies = movieDetails.find({"imdbID": {"$in": top_n_ids}})
-    for movie in movies:
-        movie_titles.append(movie["title"])
-    
-    # Create prompt for Flux API
-    prompt = f"Create a poster for a movie with this plot: {query.plot}. The top 5 closest movies are {', '.join(movie_titles)}. Generate a poster that is as close to the posters for these movies."
-    print(f"Engineered prompt for image generating: {prompt}")
-    return {"imdbIDs": top_n_ids, "movieTitles": movie_titles, "prompt": prompt}
->>>>>>> b370641b652984d227591c9d5c56386b922f2c9c
     
 @app.get("/get_available_genres")
 async def get_available_genres():
