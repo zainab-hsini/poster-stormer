@@ -15,7 +15,7 @@ import logging
 
 '''
 You fire it up by running 
-uvicorn backend.movieEmbeddingsFetch:app --reload
+uvicorn backend.embeddingsFetch:app --reload
 '''
 
 load_dotenv() 
