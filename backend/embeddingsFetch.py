@@ -170,8 +170,14 @@ async def generate_prompt(query: MovieQuery):
     # Create prompt for Flux API
     if query.style == "Illustration (Animated)":
         prompt = f"Create a poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that is in a style of flat-image illustration style. The text '{query.title}' must be clearly visible as the title."
+        
+        # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results 
+        # prompt = f"Create a poster that's closest to the posters for these movies: {top_movies_description}. Generate a poster that is in a style of flat-image illustration style. The text '{query.title}' must be clearly visible as the title."
     else:
         prompt = f"Create a poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that stylistically resembles the posters for these movies. The text '{query.title}' must be clearly visible as the title."
+        
+        # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results
+        # prompt = f"Create a poster that's closest to the posters for these movies: {top_movies_description}. The text '{query.title}' must be clearly visible as the title."
     
     print(f"Generated Prompt: {prompt}")
     
