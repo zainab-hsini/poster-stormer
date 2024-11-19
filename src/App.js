@@ -6,17 +6,17 @@ import PosterDisplay from './Components/PosterDisplay';
 import { fal } from "@fal-ai/client";
 
 function App() {
-  const [numberOfPosters, setNumberOfPosters] = useState(0); //will be used later on
+  const [numberOfPosters, setNumberOfPosters] = useState(0);
   const [postersToDisplay, setPostersToDisplay] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0); // State to track the current poster index
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState('');
+  const [loading, setLoading] = useState(false); // State to track loading progress
 
   const handleInputChange = (value) => {
     setInputValue(value);
   };
-  
-  const getPosterDescription = async () => {
 
+  const getPosterDescription = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/generate_prompt", {
         method: "POST",
@@ -24,9 +24,8 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // hardcoded for now for testing
           title: "The Marionette",
-          plot: "In a technologically advanced future, a cybernetically enhanced operative leads a covert task force dedicated to stopping cyberterrorism. As she hunts a mysterious hacker capable of breaching the minds of cyborgs, she begins to uncover unsettling truths about her own past and the nature of her existence. The lines between human and machine blur as she grapples with identity, free will, and the ethics of artificial intelligence.",
+          plot: "In a technologically advanced future, a cybernetically enhanced operative leads a covert task force...",
           genre: "Sci-Fi",
           style: "3D Digital Art",
           isRetro: false
@@ -35,47 +34,48 @@ function App() {
 
       if (!response.ok) throw new Error("failed to get poster description");
       const result = await response.json();
-      return result
+      return result;
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const handleGenerate = async () => { //This section calls the flux API to generate the poster
+  const handleGenerate = async () => {
+    setLoading(true);
     const description = await getPosterDescription();
-    if (!description || !description.prompt)
-    {
+    if (!description || !description.prompt) {
       alert("failed to get description.");
+      setLoading(false);
       return;
     }
-    const FAL_KEY = process.env.REACT_APP_FAL_KEY; //this section is to get the API key from the .env file
-    console.log("handling generation")
+
+    const FAL_KEY = process.env.REACT_APP_FAL_KEY;
     fal.config({
       credentials: FAL_KEY
     });
-    const result = await fal.subscribe("fal-ai/flux/dev", { //This is the request to the flux API
+
+    const result = await fal.subscribe("fal-ai/flux/dev", {
       input: {
-        "prompt": description.prompt, //Input value is currently taken from what the user inputs on the website
-        "num_images": 1, //this can be changed later
+        "prompt": description.prompt,
+        "num_images": 1,
         "image_size": "portrait_4_3"
       },
       logs: true,
       onQueueUpdate: (update) => {
         if (update.status === "IN_PROGRESS") {
           update.logs.map((log) => log.message).forEach(console.log);
-          }
-        },
-      });
-    if (result.data && result.data.images && result.data.images.length){
-      const posters = result.data.images.map((item) => {
-        return {
-          image: item.url
-        };
-      });
+        }
+      },
+    });
 
+    if (result.data && result.data.images && result.data.images.length) {
+      const posters = result.data.images.map((item) => {
+        return { image: item.url };
+      });
       setPostersToDisplay(posters);
-      setCurrentIndex(0); // Reset to the first poster
-    } 
+      setCurrentIndex(0);
+    }
+    setLoading(false);
   };
 
   const handleNext = () => {
@@ -92,15 +92,20 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        Poster Stormer
-      </header>
+      <header className="app-header">Poster Stormer</header>
       <div className="app-content">
         <div className="left-section">
-          <PromptInput onInputChange={handleInputChange}/>
+          <PromptInput onInputChange={handleInputChange} />
           <AdditionalOptions setNumberOfPosters={setNumberOfPosters} />
           <button onClick={handleGenerate}>Generate</button>
         </div>
+
+        {loading && (
+          <div className="progress-bar-container">
+            <div className="progress-bar"></div>
+          </div>
+        )}
+
         <PosterDisplay 
           poster={postersToDisplay[currentIndex]} 
           onNext={handleNext} 

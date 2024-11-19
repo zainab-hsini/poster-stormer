@@ -13,3 +13,4 @@ transformers
 diffusers
 faiss-cpu 
 sentence-transformers
+sse-starlette

@@ -1,36 +1,39 @@
-import React from "react";
-
-const genres = [
-  "Action",
-  "Adult",
-  "Adventure",
-  "Animation",
-  "Biography",
-  "Comedy",
-  "Crime",
-  "Documentary",
-  "Drama",
-  "Family",
-  "Fantasy",
-  "Game-Show",
-  "History",
-  "Horror",
-  "Music",
-  "Musical",
-  "Mystery",
-  "News",
-  "Reality-TV",
-  "Romance",
-  "Sci-Fi",
-  "Short",
-  "Sport",
-  "Talk-Show",
-  "Thriller",
-  "War",
-  "Western",
-];
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function AdditionalOptions({ setNumberOfPosters }) {
+  const [genres, setGenres] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const cachedGenres = JSON.parse(localStorage.getItem("genresCache"));
+        const cacheTime = localStorage.getItem("genresCacheTime");
+
+        // Check if the cache exists and is still valid (e.g., within 24 hours)
+        if (cachedGenres && cacheTime && Date.now() - cacheTime < 24 * 60 * 60 * 1000) {
+          setGenres(cachedGenres);
+        } else {
+          // Fetch from API if no valid cache
+          const backendUrl = process.env.REACT_APP_BACKEND_URL;
+          const response = await axios.get(`${backendUrl}/get_available_genres`);
+          setGenres(response.data);
+
+          // Cache the genres and current timestamp
+          localStorage.setItem("genresCache", JSON.stringify(response.data));
+          localStorage.setItem("genresCacheTime", Date.now());
+        }
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
   return (
     <div className="additional-options">
       <details>
@@ -38,13 +41,17 @@ function AdditionalOptions({ setNumberOfPosters }) {
         <div className="options">
           <label>
             Genre:
-            <select>
-              {genres.map((genre, index) => (
-                <option key={index} value={genre}>
-                  {genre}
-                </option>
-              ))}
-            </select>
+            {isLoading ? (
+              <span>Loading...</span>
+            ) : (
+              <select>
+                {genres.map((genre, index) => (
+                  <option key={index} value={genre}>
+                    {genre}
+                  </option>
+                ))}
+              </select>
+            )}
           </label>
           <label>
             Decade:
