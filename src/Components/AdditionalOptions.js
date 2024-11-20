@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { Box, Select, Input, Spinner, VStack, Text } from '@chakra-ui/react';
+import axios from 'axios';
 
 function AdditionalOptions({ setNumberOfPosters }) {
   const [genres, setGenres] = useState([]);
@@ -8,24 +9,21 @@ function AdditionalOptions({ setNumberOfPosters }) {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const cachedGenres = JSON.parse(localStorage.getItem("genresCache"));
-        const cacheTime = localStorage.getItem("genresCacheTime");
+        const cachedGenres = JSON.parse(localStorage.getItem('genresCache'));
+        const cacheTime = localStorage.getItem('genresCacheTime');
 
-        // Check if the cache exists and is still valid (e.g., within 24 hours)
         if (cachedGenres && cacheTime && Date.now() - cacheTime < 24 * 60 * 60 * 1000) {
           setGenres(cachedGenres);
         } else {
-          // Fetch from API if no valid cache
           const backendUrl = process.env.REACT_APP_BACKEND_URL;
           const response = await axios.get(`${backendUrl}/get_available_genres`);
           setGenres(response.data);
 
-          // Cache the genres and current timestamp
-          localStorage.setItem("genresCache", JSON.stringify(response.data));
-          localStorage.setItem("genresCacheTime", Date.now());
+          localStorage.setItem('genresCache', JSON.stringify(response.data));
+          localStorage.setItem('genresCacheTime', Date.now());
         }
       } catch (error) {
-        console.error("Error fetching genres:", error);
+        console.error('Error fetching genres:', error);
       } finally {
         setIsLoading(false);
       }
@@ -35,44 +33,45 @@ function AdditionalOptions({ setNumberOfPosters }) {
   }, []);
 
   return (
-    <div className="additional-options">
+    <Box w="100%" p={4} bg="primary.50" borderRadius="md" boxShadow="sm">
       <details>
         <summary>Expand for more features</summary>
-        <div className="options">
-          <label>
-            Genre:
+        <VStack align="stretch" spacing={4} mt={4}>
+          <Box>
+            <Text fontWeight="bold" mb={2}>Genre:</Text>
             {isLoading ? (
-              <span>Loading...</span>
+              <Spinner />
             ) : (
-              <select>
+              <Select placeholder="Select genre" focusBorderColor="primary.500">
                 {genres.map((genre, index) => (
                   <option key={index} value={genre}>
                     {genre}
                   </option>
                 ))}
-              </select>
+              </Select>
             )}
-          </label>
-          <label>
-            Decade:
-            <input type="text" placeholder="e.g., 1980s" />
-          </label>
-          <label>
-            # of posters:
-            <input
+          </Box>
+          <Box>
+            <Text fontWeight="bold" mb={2}>Decade:</Text>
+            <Input type="text" placeholder="e.g., 1980s" focusBorderColor="primary.500" />
+          </Box>
+          <Box>
+            <Text fontWeight="bold" mb={2}># of Posters:</Text>
+            <Input
               type="number"
               min="1"
               max="10"
+              focusBorderColor="primary.500"
               onChange={(e) => setNumberOfPosters(e.target.value)}
             />
-          </label>
-          <label>
-            Style:
-            <input type="text" placeholder="e.g., Retro" />
-          </label>
-        </div>
+          </Box>
+          <Box>
+            <Text fontWeight="bold" mb={2}>Style:</Text>
+            <Input type="text" placeholder="e.g., Retro" focusBorderColor="primary.500" />
+          </Box>
+        </VStack>
       </details>
-    </div>
+    </Box>
   );
 }
 

@@ -1,21 +1,26 @@
 import React from 'react';
+import { Box, Image, Text, Button, HStack, VStack } from '@chakra-ui/react';
 
 function PosterDisplay({ poster, onNext, onPrev, canNext, canPrev }) {
   return (
-    <div className="poster-display">
+    <VStack align="center" p={4} bg="primary.50" borderRadius="md" boxShadow="sm">
       {poster ? (
-        <div className="poster-placeholder">
-          <img src={poster.image} alt={poster.title} style={{ width: '100%', height: 'auto' }} />
-          <p>{poster.title}</p>
-        </div>
+        <Box textAlign="center">
+          <Image src={poster.image} alt={poster.title} borderRadius="md" mb={4} />
+          <Text fontWeight="bold" color="primary.700">{poster.title}</Text>
+        </Box>
       ) : (
-        <p>No posters to display. Please generate some!</p>
+        <Text>No posters to display. Please generate some!</Text>
       )}
-      <div className="navigation">
-        <button onClick={onPrev} disabled={!canPrev}>&lt; Previous</button>
-        <button onClick={onNext} disabled={!canNext}>Next &gt;</button>
-      </div>
-    </div>
+      <HStack spacing={4}>
+        <Button colorScheme="primary" onClick={onPrev} isDisabled={!canPrev}>
+          &lt; Previous
+        </Button>
+        <Button colorScheme="primary" onClick={onNext} isDisabled={!canNext}>
+          Next &gt;
+        </Button>
+      </HStack>
+    </VStack>
   );
 }
 

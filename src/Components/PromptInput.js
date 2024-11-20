@@ -1,20 +1,25 @@
 import React from 'react';
+import { Box, Textarea, Button } from '@chakra-ui/react';
 
-function PromptInput({onInputChange}) {
+function PromptInput({ onInputChange }) {
   const handleMovieDescriptionChange = (event) => {
-    onInputChange(event.target.value)
-  }
-  
+    onInputChange(event.target.value);
+  };
+
   return (
-    <div className="prompt-input">
-      <textarea 
+    <Box w="100%" p={4} bg="primary.50" borderRadius="md" boxShadow="sm">
+      <Textarea
         onChange={handleMovieDescriptionChange}
-        placeholder="Please Write the Synopsis of Your Movie" 
-        rows="5"></textarea>
-      <div className="button-container">
-        <button>Edit</button>
-      </div>
-    </div>
+        placeholder="Please write the synopsis of your movie"
+        rows={5}
+        resize="none"
+        focusBorderColor="primary.500"
+        mb={4}
+      />
+      <Button colorScheme="primary" size="sm">
+        Edit
+      </Button>
+    </Box>
   );
 }
 

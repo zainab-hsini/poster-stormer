@@ -24,7 +24,7 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "The Skyfarer’s Song",
+          title: "The Skybound Caravan",
           plot: inputValue,
           genre: "Adventure",
           style: "Illustration (Animation)",
