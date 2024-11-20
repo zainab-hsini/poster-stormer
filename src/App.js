@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { Button } from '@chakra-ui/react';
 import PromptInput from './Components/PromptInput';
 import AdditionalOptions from './Components/AdditionalOptions';
 import PosterDisplay from './Components/PosterDisplay';
@@ -24,10 +25,10 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "The Skybound Caravan",
+          title: "Seasons Between Us",
           plot: inputValue,
-          genre: "Adventure",
-          style: "Illustration (Animation)",
+          genre: "Action",
+          style: "3D Digital Art",
           isRetro: false
         }),
       });
@@ -97,7 +98,7 @@ function App() {
         <div className="left-section">
           <PromptInput onInputChange={handleInputChange} />
           <AdditionalOptions setNumberOfPosters={setNumberOfPosters} />
-          <button onClick={handleGenerate}>Generate</button>
+          <Button colorScheme="primary" size="lg" onClick={handleGenerate}>Generate</Button>
         </div>
 
         {loading && (

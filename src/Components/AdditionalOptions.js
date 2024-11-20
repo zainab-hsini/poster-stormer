@@ -34,43 +34,40 @@ function AdditionalOptions({ setNumberOfPosters }) {
 
   return (
     <Box w="100%" p={4} bg="primary.50" borderRadius="md" boxShadow="sm">
-      <details>
-        <summary>Expand for more features</summary>
-        <VStack align="stretch" spacing={4} mt={4}>
-          <Box>
-            <Text fontWeight="bold" mb={2}>Genre:</Text>
-            {isLoading ? (
-              <Spinner />
-            ) : (
-              <Select placeholder="Select genre" focusBorderColor="primary.500">
-                {genres.map((genre, index) => (
-                  <option key={index} value={genre}>
-                    {genre}
-                  </option>
-                ))}
-              </Select>
-            )}
-          </Box>
-          <Box>
-            <Text fontWeight="bold" mb={2}>Decade:</Text>
-            <Input type="text" placeholder="e.g., 1980s" focusBorderColor="primary.500" />
-          </Box>
-          <Box>
-            <Text fontWeight="bold" mb={2}># of Posters:</Text>
-            <Input
-              type="number"
-              min="1"
-              max="10"
-              focusBorderColor="primary.500"
-              onChange={(e) => setNumberOfPosters(e.target.value)}
-            />
-          </Box>
-          <Box>
-            <Text fontWeight="bold" mb={2}>Style:</Text>
-            <Input type="text" placeholder="e.g., Retro" focusBorderColor="primary.500" />
-          </Box>
-        </VStack>
-      </details>
+      <VStack align="stretch" spacing={4}>
+        <Box>
+          <Text fontWeight="bold" mb={2}>Genre:</Text>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <Select placeholder="Select genre" focusBorderColor="primary.500">
+              {genres.map((genre, index) => (
+                <option key={index} value={genre}>
+                  {genre}
+                </option>
+              ))}
+            </Select>
+          )}
+        </Box>
+        <Box>
+          <Text fontWeight="bold" mb={2}>Decade:</Text>
+          <Input type="text" placeholder="e.g., 1980s" focusBorderColor="primary.500" />
+        </Box>
+        <Box>
+          <Text fontWeight="bold" mb={2}># of Posters:</Text>
+          <Input
+            type="number"
+            min="1"
+            max="10"
+            focusBorderColor="primary.500"
+            onChange={(e) => setNumberOfPosters(e.target.value)}
+          />
+        </Box>
+        <Box>
+          <Text fontWeight="bold" mb={2}>Style:</Text>
+          <Input type="text" placeholder="e.g., Retro" focusBorderColor="primary.500" />
+        </Box>
+      </VStack>
     </Box>
   );
 }
