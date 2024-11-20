@@ -26,7 +26,7 @@ function App() {
         body: JSON.stringify({
           title: "The Marionette",
           plot: inputValue,
-          genre: "Adventure",
+          genre: "Adult",
           style: "3D Digital Art",
           isRetro: false
         }),

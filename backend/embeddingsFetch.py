@@ -171,12 +171,15 @@ async def generate_prompt(query: MovieQuery):
     
     # Create prompt for Flux API
     if query.style == "Illustration (Animated)":
-        prompt = f"Create a poster for a movie titled '{query.title},' which must be clearly visible. This is the plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that is in a flat-image illustration style."
+        prompt = f"Create an image (no text) for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that is in a flat-image illustration style."
         
         # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results 
         # prompt = f"Create a poster thats closest to the posters for these movies: {top_movies_description}. Generate a poster that is in a style of flat-image illustration style. The text {query.title} must be clearly visible as the title."
+    elif query.style == "Realistic Photography":
+        prompt = f"Create an image (no text) that prominently features a close-up of the face of main subject for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that stylistically resembles that of the similar movies."
+        
     else:
-        prompt = f"Create a poster for a movie titled '{query.title},' which must be clearly visible. This is the plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that stylistically resembles that of the similar movies."
+        prompt = f"Create an image (no text) for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that stylistically resembles that of the similar movies."
         
         # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results
         # prompt = f"Create a poster that's closest to the posters for these movies: {top_movies_description}. The text '{query.title}' must be clearly visible as the title."
