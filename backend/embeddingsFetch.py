@@ -41,11 +41,11 @@ try:
     db_client.server_info() 
     print("Connected successfully to the 'Movies' database!")
     
-    posterDetails = db.get_collection("posterDetails")
-    print("Connected successfully to the 'Posters' database!")
-    
     movieEmbeddings = db.get_collection("movieEmbeddings")
     print("Connected successfully to the 'Movie Embeddings' database!")
+    
+    userInputCollection = db.get_collection("userInput")
+    print("Connected successfully to the 'User Input' database!")
     
 except pymongo.errors.ConnectionFailure as e:
     print(f"Could not connect to MongoDB: {e}")
@@ -185,6 +185,15 @@ async def generate_prompt(query: MovieQuery):
         # prompt = f"Create a poster that's closest to the posters for these movies: {top_movies_description}. The text '{query.title}' must be clearly visible as the title."
     
     print(f"Generated Prompt: {prompt}")
+    
+    userInputCollection.insert_one({
+        "title": query.title,
+        "plot": query.plot,
+        "genre": query.genre,
+        "style": query.style,
+        "similar_movies": top_movies_dict,
+        "generated_prompt": prompt
+    })
     
     return {"imdbIDs": top_n_ids, "movieTitles": top_movies_dict, "prompt": prompt}
     

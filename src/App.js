@@ -24,10 +24,10 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "The Marionette",
+          title: "The Skyfarer’s Song",
           plot: inputValue,
-          genre: "Adult",
-          style: "3D Digital Art",
+          genre: "Adventure",
+          style: "Illustration (Animation)",
           isRetro: false
         }),
       });
