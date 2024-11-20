@@ -25,8 +25,8 @@ function App() {
         },
         body: JSON.stringify({
           title: "The Marionette",
-          plot: "In a technologically advanced future, a cybernetically enhanced operative leads a covert task force...",
-          genre: "Sci-Fi",
+          plot: inputValue,
+          genre: "Adventure",
           style: "3D Digital Art",
           isRetro: false
         }),
