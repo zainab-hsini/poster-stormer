@@ -25,9 +25,9 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "Seasons Between Us",
+          title: "The Parallax Room",
           plot: inputValue,
-          genre: "Action",
+          genre: "Thriller",
           style: "3D Digital Art",
           isRetro: false
         }),
@@ -58,7 +58,7 @@ function App() {
     const result = await fal.subscribe("fal-ai/flux/dev", {
       input: {
         "prompt": description.prompt,
-        "num_images": 1,
+        "num_images": 3,
         "image_size": "portrait_4_3"
       },
       logs: true,
