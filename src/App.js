@@ -9,12 +9,22 @@ function App() {
   const [numberOfPosters, setNumberOfPosters] = useState(0);
   const [postersToDisplay, setPostersToDisplay] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [inputValue, setInputValue] = useState('');
+  const [plotValue, setPlotValue] = useState('');
+  const [titleValue, setTitleValue] = useState('');
+  const [genreValue, setGenreValue] = useState('');
   const [loading, setLoading] = useState(false); // State to track loading progress
 
-  const handleInputChange = (value) => {
-    setInputValue(value);
+  const handlePlotChange = (value) => {
+    setPlotValue(value);
+    //can i just add more setInputValues to change
+    //so it would change to inputPlotValue, inputTitleValue, inputGenreValue, inputStyleValue
   };
+  const handleTitleChange = (value) => {
+    setTitleValue(value);
+  }
+  const handleGenreChange = (value) => {
+    setGenreValue(value);
+  }
 
   const getPosterDescription = async () => {
     try {
@@ -24,10 +34,10 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "The Skyfarer’s Song",
-          plot: inputValue,
-          genre: "Adventure",
-          style: "Illustration (Animation)",
+          title: titleValue,
+          plot: plotValue,
+          genre: genreValue,
+          style: "Illustration (Animated)",
           isRetro: false
         }),
       });
@@ -95,8 +105,8 @@ function App() {
       <header className="app-header">Poster Stormer</header>
       <div className="app-content">
         <div className="left-section">
-          <PromptInput onInputChange={handleInputChange} />
-          <AdditionalOptions setNumberOfPosters={setNumberOfPosters} />
+          <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange}/>
+          <AdditionalOptions setNumberOfPosters={setNumberOfPosters} onGenreChange={handleGenreChange}/>
           <button onClick={handleGenerate}>Generate</button>
         </div>
 

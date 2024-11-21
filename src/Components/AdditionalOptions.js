@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function AdditionalOptions({ setNumberOfPosters }) {
+function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
   const [genres, setGenres] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleGenreSelection = (event) => {
+    onGenreChange(event.target.value)
+  }
+
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -44,7 +49,7 @@ function AdditionalOptions({ setNumberOfPosters }) {
             {isLoading ? (
               <span>Loading...</span>
             ) : (
-              <select>
+              <select onChange={handleGenreSelection}>
                 {genres.map((genre, index) => (
                   <option key={index} value={genre}>
                     {genre}

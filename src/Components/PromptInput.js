@@ -1,14 +1,22 @@
 import React from 'react';
 
-function PromptInput({onInputChange}) {
-  const handleMovieDescriptionChange = (event) => {
-    onInputChange(event.target.value)
+function PromptInput({onPlotChange, onTitleChange}) {
+  const handlePlotChange = (event) => {
+    onPlotChange(event.target.value)
   }
+  const handleTitleChange = (event) => {
+    onTitleChange(event.target.value)
+  }
+
   
   return (
     <div className="prompt-input">
+      <input 
+        onChange={handleTitleChange}
+        placeholder="Please Enter Movie Title">
+        </input>
       <textarea 
-        onChange={handleMovieDescriptionChange}
+        onChange={handlePlotChange}
         placeholder="Please Write the Synopsis of Your Movie" 
         rows="5"></textarea>
       <div className="button-container">
