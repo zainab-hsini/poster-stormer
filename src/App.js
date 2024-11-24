@@ -16,8 +16,6 @@ function App() {
 
   const handlePlotChange = (value) => {
     setPlotValue(value);
-    //can i just add more setInputValues to change
-    //so it would change to inputPlotValue, inputTitleValue, inputGenreValue, inputStyleValue
   };
   const handleTitleChange = (value) => {
     setTitleValue(value);
@@ -107,7 +105,7 @@ function App() {
         <div className="left-section">
           <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange}/>
           <AdditionalOptions setNumberOfPosters={setNumberOfPosters} onGenreChange={handleGenreChange}/>
-          <button onClick={handleGenerate}>Generate</button>
+          <button onClick={handleGenerate} disabled={!titleValue || !plotValue}>Generate</button>
         </div>
 
         {loading && (

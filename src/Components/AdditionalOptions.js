@@ -24,6 +24,9 @@ function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
           const backendUrl = process.env.REACT_APP_BACKEND_URL;
           const response = await axios.get(`${backendUrl}/get_available_genres`);
           setGenres(response.data);
+          if (response.data && response.data.length){ //sets the default genre to the first value in the genre array(which is Action)
+            onGenreChange(response.data[0])
+          }
 
           // Cache the genres and current timestamp
           localStorage.setItem("genresCache", JSON.stringify(response.data));

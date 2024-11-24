@@ -11,14 +11,19 @@ function PromptInput({onPlotChange, onTitleChange}) {
   
   return (
     <div className="prompt-input">
-      <input 
+      <div>
+        <input 
         onChange={handleTitleChange}
         placeholder="Please Enter Movie Title">
         </input>
-      <textarea 
+      </div>
+      <div>
+        <textarea 
         onChange={handlePlotChange}
         placeholder="Please Write the Synopsis of Your Movie" 
-        rows="5"></textarea>
+        rows="5">
+        </textarea>
+      </div>
       <div className="button-container">
         <button>Edit</button>
       </div>
