@@ -45,7 +45,10 @@ function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
   return (
     <div className="additional-options">
       <details>
-        <summary>Expand for more features</summary>
+        <summary>Expand for optional features</summary>
+        <div className="optional-note">
+          <p><em>Add more details to your prompt with the add-ons below!</em></p>
+        </div>
         <div className="options">
           <label>
             Genre:

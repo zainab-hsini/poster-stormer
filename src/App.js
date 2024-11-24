@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import PromptInput from './Components/PromptInput';
+import './Components/PromptInput.css';
 import AdditionalOptions from './Components/AdditionalOptions';
+import './Components/AdditionalOptions.css'
 import PosterDisplay from './Components/PosterDisplay';
+import './Components/PosterDisplay.css'
 import { fal } from "@fal-ai/client";
 
 function App() {
