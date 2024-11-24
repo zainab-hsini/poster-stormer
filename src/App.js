@@ -12,7 +12,7 @@ function App() {
   const [plotValue, setPlotValue] = useState('');
   const [titleValue, setTitleValue] = useState('');
   const [genreValue, setGenreValue] = useState('');
-  const [loading, setLoading] = useState(false); // State to track loading progress
+  const [loading, setLoading] = useState(false); 
 
   const handlePlotChange = (value) => {
     setPlotValue(value);
@@ -102,7 +102,7 @@ function App() {
     <div className="app">
       <header className="app-header">Poster Stormer</header>
       <div className="app-content">
-        <div className="left-section">
+        <div className="input-section">
           <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange}/>
           <AdditionalOptions setNumberOfPosters={setNumberOfPosters} onGenreChange={handleGenreChange}/>
           <button onClick={handleGenerate} disabled={!titleValue || !plotValue}>Generate</button>
@@ -114,14 +114,16 @@ function App() {
           </div>
         )}
 
-        <PosterDisplay 
-          poster={postersToDisplay[currentIndex]} 
-          onNext={handleNext} 
-          onPrev={handlePrev} 
+      <div className="poster-section">
+        <PosterDisplay
+          poster={postersToDisplay[currentIndex]}
+          onNext={handleNext}
+          onPrev={handlePrev}
           canNext={currentIndex < postersToDisplay.length - 1}
           canPrev={currentIndex > 0}
         />
-      </div>
+      </div> 
+    </div>
     </div>
   );
 }

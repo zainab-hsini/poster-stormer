@@ -24,9 +24,6 @@ function PromptInput({onPlotChange, onTitleChange}) {
         rows="5">
         </textarea>
       </div>
-      <div className="button-container">
-        <button>Edit</button>
-      </div>
     </div>
   );
 }
