@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import PromptInput from './Components/PromptInput';
 import AdditionalOptions from './Components/AdditionalOptions';
@@ -13,6 +13,7 @@ function App() {
   const [titleValue, setTitleValue] = useState('');
   const [genreValue, setGenreValue] = useState('');
   const [loading, setLoading] = useState(false); 
+  const posterRef = useRef(null);
 
   const handlePlotChange = (value) => {
     setPlotValue(value);
@@ -82,6 +83,7 @@ function App() {
       });
       setPostersToDisplay(posters);
       setCurrentIndex(0);
+
     }
     setLoading(false);
   };
@@ -97,6 +99,18 @@ function App() {
       setCurrentIndex(currentIndex - 1);
     }
   };
+
+  useEffect(() => {
+    if (postersToDisplay.length > 0 && posterRef.current) {
+      const poster = posterRef.current;
+      const posterTop = poster.getBoundingClientRect().top + window.scrollY;  // Top of the poster relative to the document
+      const windowHeight = window.innerHeight;  // Height of the visible area
+      const posterHeight = poster.offsetHeight;  // Actual height of the poster image
+      const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;  // Position to scroll to center the poster
+      
+      window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+    }
+  }, [postersToDisplay, currentIndex]);  // Trigger this when posters or currentIndex change  
 
   return (
     <div className="app">
@@ -114,16 +128,17 @@ function App() {
           </div>
         )}
 
-      <div className="poster-section">
-        <PosterDisplay
-          poster={postersToDisplay[currentIndex]}
-          onNext={handleNext}
-          onPrev={handlePrev}
-          canNext={currentIndex < postersToDisplay.length - 1}
-          canPrev={currentIndex > 0}
-        />
-      </div> 
-    </div>
+        <div className="poster-display">
+          <PosterDisplay
+            poster={postersToDisplay[currentIndex]}
+            onNext={handleNext}
+            onPrev={handlePrev}
+            canNext={currentIndex < postersToDisplay.length - 1}
+            canPrev={currentIndex > 0}
+            posterRef={posterRef}
+          />
+        </div>
+      </div>           
     </div>
   );
 }

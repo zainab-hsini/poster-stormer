@@ -52,7 +52,6 @@ Ensure you have the following installed:
 3. Install the backend dependencies:
 
    ```bash
-   cd backend
    pip install -r requirements.txt
    ```
 
@@ -70,7 +69,6 @@ Ensure you have the following installed:
 
 1. Start the backend server:
    ```bash
-   cd backend/embeddingsFetch.py
    uvicorn backend.embeddingsFetch:app --reload
    ```
    The backend server will start at `http://127.0.0.1:8000`.

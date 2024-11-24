@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-function PosterDisplay({ poster, onNext, onPrev, canNext, canPrev }) {
+function PosterDisplay({ poster, onNext, onPrev, canNext, canPrev, posterRef }) {
+  
+  // This function will handle the scrolling logic once the image is loaded
+  const handleImageLoad = () => {
+    if (posterRef && posterRef.current) {
+      const posterTop = posterRef.current.getBoundingClientRect().top + window.scrollY;
+      const windowHeight = window.innerHeight;
+      const posterHeight = posterRef.current.offsetHeight;
+      const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;
+
+      // Scroll to the calculated position with smooth behavior
+      window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="poster-display">
+    <div className="poster-display" ref={posterRef}>
       {poster ? (
         <div className="poster-placeholder">
-          <img src={poster.image} alt={poster.title} style={{ width: '100%', height: 'auto' }} />
+          <img 
+            src={poster.image} 
+            alt={poster.title} 
+            style={{ width: '100%', height: 'auto' }} 
+            onLoad={handleImageLoad}  // Trigger scroll after image is loaded
+          />
           <p>{poster.title}</p>
         </div>
       ) : (
