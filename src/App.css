@@ -5,10 +5,10 @@
 }
 
 .app-header {
-  background-color: #ccc;
+  background-color: #93cefe;
   padding: 10px;
   font-size: 24px;
-  text-align: left;
+  text-align: center;
   font-weight: bold;
 }
 
@@ -21,7 +21,7 @@
 .left-section {
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 100%;
   gap: 15px;
 }
 
@@ -55,7 +55,7 @@ button {
 }
 
 .progress-bar-container {
-  width: 100%;
+  width: 20%;
   height: 10px;
   background-color: #f3f3f3;
   border-radius: 5px;
@@ -63,7 +63,7 @@ button {
 }
 
 .progress-bar {
-  width: 100%; /* This could be dynamically adjusted based on progress */
+  width: 50%; /* This could be dynamically adjusted based on progress */
   height: 100%;
   background-color: #4caf50;
   animation: progress-bar-animation 3s infinite;

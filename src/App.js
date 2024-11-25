@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Button } from '@chakra-ui/react';
+import { Button, VStack } from '@chakra-ui/react';
 import PromptInput from './Components/PromptInput';
 import AdditionalOptions from './Components/AdditionalOptions';
 import PosterDisplay from './Components/PosterDisplay';
@@ -25,7 +25,7 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "The Parallax Room",
+          title: "Vanishing Point",
           plot: inputValue,
           genre: "Thriller",
           style: "3D Digital Art",
@@ -59,7 +59,10 @@ function App() {
       input: {
         "prompt": description.prompt,
         "num_images": 3,
-        "image_size": "portrait_4_3"
+        "image_size": {
+          "width": 600,
+          "height": 800
+        }
       },
       logs: true,
       onQueueUpdate: (update) => {
@@ -94,27 +97,27 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">Poster Stormer</header>
-      <div className="app-content">
-        <div className="left-section">
+      <VStack>
+        <div className="app-content">
           <PromptInput onInputChange={handleInputChange} />
-          <AdditionalOptions setNumberOfPosters={setNumberOfPosters} />
-          <Button colorScheme="primary" size="lg" onClick={handleGenerate}>Generate</Button>
+          <VStack>
+            <AdditionalOptions setNumberOfPosters={setNumberOfPosters} />
+            <Button colorScheme="primary" size="lg" onClick={handleGenerate}>Generate</Button>
+          </VStack>
         </div>
-
-        {loading && (
-          <div className="progress-bar-container">
-            <div className="progress-bar"></div>
-          </div>
-        )}
-
+          {loading && (
+            <div className="progress-bar-container">
+              <div className="progress-bar"></div>
+            </div>
+          )}
         <PosterDisplay 
           poster={postersToDisplay[currentIndex]} 
           onNext={handleNext} 
           onPrev={handlePrev} 
           canNext={currentIndex < postersToDisplay.length - 1}
           canPrev={currentIndex > 0}
-        />
-      </div>
+          />
+        </VStack>
     </div>
   );
 }

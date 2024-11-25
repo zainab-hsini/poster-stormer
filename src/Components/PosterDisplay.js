@@ -3,14 +3,14 @@ import { Box, Image, Text, Button, HStack, VStack } from '@chakra-ui/react';
 
 function PosterDisplay({ poster, onNext, onPrev, canNext, canPrev }) {
   return (
-    <VStack align="center" p={4} bg="primary.50" borderRadius="md" boxShadow="sm">
+    <VStack align="center" p={9} bg="primary.50" borderRadius="md" boxShadow="sm">
       {poster ? (
         <Box textAlign="center">
           <Image src={poster.image} alt={poster.title} borderRadius="md" mb={4} />
           <Text fontWeight="bold" color="primary.700">{poster.title}</Text>
         </Box>
       ) : (
-        <Text>No posters to display. Please generate some!</Text>
+        <Text>No posters to display</Text>
       )}
       <HStack spacing={4}>
         <Button colorScheme="primary" onClick={onPrev} isDisabled={!canPrev}>
