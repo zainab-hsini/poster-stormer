@@ -11,6 +11,9 @@ from typing import List, Optional
 import certifi
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+from fastapi.responses import StreamingResponse
+import json
+import asyncio
 
 
 '''
@@ -111,18 +114,13 @@ async def generate_prompt(query: MovieQuery):
         raise HTTPException(status_code=400, detail="Your title or plot description cannot be empty.")
     
     query_embedding = embedding_model.encode(query.plot).astype("float32")
-    
-    # Retrieve filtered IDs from movieDetails
     filtered_ids = get_filtered_ids(query)
-    
+
     if not filtered_ids:
         raise HTTPException(status_code=404, detail="No movies matched the filters.")
     
-    # Retrieve embeddings for the filtered IDs from movieEmbeddings
-    filtered_embeddings = []
-    filtered_embeddings_ids = []
-    missing_embeddings_ids = []
-
+    # Retrieve embeddings and build FAISS index
+    filtered_embeddings, filtered_embeddings_ids, missing_embeddings_ids = [], [], []
     embeddings_cursor = movieEmbeddings.find({"imdbID": {"$in": filtered_ids}}, {"embedding": 1, "imdbID": 1})
     for movie_embedding in embeddings_cursor:
         if "embedding" in movie_embedding and "imdbID" in movie_embedding:
@@ -131,72 +129,52 @@ async def generate_prompt(query: MovieQuery):
         else:
             missing_embeddings_ids.append(movie_embedding.get("imdbID"))
 
-    if missing_embeddings_ids:
-        logger.warning(f"Missing embeddings for IDs: {missing_embeddings_ids}")
-    
     if not filtered_embeddings:
         raise HTTPException(status_code=404, detail="No valid embeddings found for the filtered movies.")
     
-    # Build FAISS Index
     try:
         faiss_index = build_faiss_index(np.array(filtered_embeddings).astype("float32"))
         _, indices = faiss_index.search(np.expand_dims(query_embedding, axis=0), 5)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error building FAISS index or performing search: {str(e)}")
     
-    top_n_ids = []
-    for i in indices[0]:
-        top_n_ids.append(filtered_embeddings_ids[i])
-    
-    # Fetch movie titles and directors
+    top_n_ids = [filtered_embeddings_ids[i] for i in indices[0]]
     titles_and_directors = {}
     movies_cursor = movieDetails.find({"imdbID": {"$in": top_n_ids}}, {"title": 1, "director": 1, "imdbID": 1})
+    
+    loading_updates = []
     for movie in movies_cursor:
         imdbID = movie["imdbID"]
-        titles_and_directors[imdbID] = {
-            "title": movie.get("title", "unknown title"),
-            "director": movie.get("director", "unknown director")
-        }
-    
-    # Create description using the top movies
-    top_movies_description = ""
-    top_movies_dict = {}
-    for imdbID, details in titles_and_directors.items():
-        title = details.get("title", "unknown title")
-        director = details.get("director", "unknown director")
-        if top_movies_description:
-            top_movies_description += ", "
-        top_movies_description += f"{title} by {director}"
-        top_movies_dict[title] = director
-    
-    # Create prompt for Flux API
-    if query.style == "Illustration (Animated)":
-        prompt = f"Create an image (no text) for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that is in a flat-image illustration style."
+        title = movie.get("title", "unknown title")
+        director = movie.get("director", "unknown director")
+        titles_and_directors[imdbID] = {"title": title, "director": director}
         
-        # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results 
-        # prompt = f"Create a poster thats closest to the posters for these movies: {top_movies_description}. Generate a poster that is in a style of flat-image illustration style. The text {query.title} must be clearly visible as the title."
-    elif query.style == "Realistic Photography":
-        prompt = f"Create an image (no text) that prominently features a close-up of the face of main subject for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that stylistically resembles that of the similar movies."
-        
-    else:
-        prompt = f"Create an image (no text) for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that stylistically resembles that of the similar movies."
-        
-        # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results
-        # prompt = f"Create a poster that's closest to the posters for these movies: {top_movies_description}. The text '{query.title}' must be clearly visible as the title."
-    
-    print(f"Generated Prompt: {prompt}")
-    
+        # Add loading update for each movie
+        loading_updates.append(f"Processing: {title} by {director}")
+
+    # Create the prompt
+    top_movies_description = ", ".join(
+        f"{details['title']} by {details['director']}" for details in titles_and_directors.values()
+    )
+    prompt = f"Create an image for the plot: {query.plot}. Similar movies: {top_movies_description}."
+
+    # Insert into userInputCollection
     userInputCollection.insert_one({
         "title": query.title,
         "plot": query.plot,
         "genre": query.genre,
         "style": query.style,
-        "similar_movies": top_movies_dict,
+        "similar_movies": titles_and_directors,
         "generated_prompt": prompt
     })
-    
-    return {"imdbIDs": top_n_ids, "movieTitles": top_movies_dict, "prompt": prompt}
-    
+
+    # Combine loading updates with the final response
+    return {
+        "loadingUpdates": loading_updates,
+        "imdbIDs": top_n_ids,
+        "movieTitles": titles_and_directors,
+        "prompt": prompt
+    }    
     
 @app.get("/get_available_genres")
 async def get_available_genres():
@@ -215,3 +193,53 @@ async def get_available_genres():
 
     # Convert the set to a sorted list and return it
     return sorted(unique_genres)
+from fastapi.responses import StreamingResponse
+import asyncio
+
+@app.post("/generate_prompt_stream")
+async def generate_prompt_stream(query: MovieQuery):
+    if not query.plot or query.plot.strip() == "" or not query.title or query.title.strip() == "":
+        raise HTTPException(status_code=400, detail="Your title or plot description cannot be empty.")
+    
+    query_embedding = embedding_model.encode(query.plot).astype("float32")
+    filtered_ids = get_filtered_ids(query)
+
+    if not filtered_ids:
+        raise HTTPException(status_code=404, detail="No movies matched the filters.")
+    
+    filtered_embeddings, filtered_embeddings_ids = [], []
+    embeddings_cursor = movieEmbeddings.find({"imdbID": {"$in": filtered_ids}}, {"embedding": 1, "imdbID": 1})
+    for movie_embedding in embeddings_cursor:
+        if "embedding" in movie_embedding and "imdbID" in movie_embedding:
+            filtered_embeddings.append(movie_embedding["embedding"])
+            filtered_embeddings_ids.append(movie_embedding["imdbID"])
+
+    if not filtered_embeddings:
+        raise HTTPException(status_code=404, detail="No valid embeddings found for the filtered movies.")
+    
+    try:
+        faiss_index = build_faiss_index(np.array(filtered_embeddings).astype("float32"))
+        _, indices = faiss_index.search(np.expand_dims(query_embedding, axis=0), 5)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error building FAISS index or performing search: {str(e)}")
+    
+    top_n_ids = [filtered_embeddings_ids[i] for i in indices[0]]
+    movies_cursor = movieDetails.find({"imdbID": {"$in": top_n_ids}}, {"title": 1, "director": 1})
+
+    async def movie_stream():
+        titles_and_directors = {}
+        for movie in movies_cursor:
+            imdbID = movie["imdbID"]
+            title = movie.get("title", "unknown title")
+            director = movie.get("director", "unknown director")
+            titles_and_directors[imdbID] = {"title": title, "director": director}
+            yield f"data: {title} by {director}\n\n"
+            await asyncio.sleep(1)  # Simulate processing time
+
+        top_movies_description = ", ".join(
+            f"{details['title']} by {details['director']}" for details in titles_and_directors.values()
+        )
+        prompt = f"Create an image for the plot: {query.plot}. Similar movies: {top_movies_description}."
+        yield f"data: FINAL_PROMPT::{prompt}\n\n"
+
+    return StreamingResponse(movie_stream(), media_type="text/event-stream")

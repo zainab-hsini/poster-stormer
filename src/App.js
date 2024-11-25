@@ -3,9 +3,9 @@ import './App.css';
 import PromptInput from './Components/PromptInput';
 import './Components/PromptInput.css';
 import AdditionalOptions from './Components/AdditionalOptions';
-import './Components/AdditionalOptions.css'
+import './Components/AdditionalOptions.css';
 import PosterDisplay from './Components/PosterDisplay';
-import './Components/PosterDisplay.css'
+import './Components/PosterDisplay.css';
 import { fal } from "@fal-ai/client";
 
 function App() {
@@ -15,7 +15,9 @@ function App() {
   const [plotValue, setPlotValue] = useState('');
   const [titleValue, setTitleValue] = useState('');
   const [genreValue, setGenreValue] = useState('');
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [loadingPercentage, setLoadingPercentage] = useState(0);
+  const [loadingMovies, setLoadingMovies] = useState([]);
   const posterRef = useRef(null);
 
   const handlePlotChange = (value) => {
@@ -23,10 +25,10 @@ function App() {
   };
   const handleTitleChange = (value) => {
     setTitleValue(value);
-  }
+  };
   const handleGenreChange = (value) => {
     setGenreValue(value);
-  }
+  };
 
   const getPosterDescription = async () => {
     try {
@@ -40,12 +42,22 @@ function App() {
           plot: plotValue,
           genre: genreValue,
           style: "Illustration (Animated)",
-          isRetro: false
+          isRetro: false,
         }),
       });
 
-      if (!response.ok) throw new Error("failed to get poster description");
+      if (!response.ok) throw new Error("Failed to get poster description");
       const result = await response.json();
+
+      // Handle loading updates
+      const updates = result.loadingUpdates || [];
+      for (let i = 0; i < updates.length; i++) {
+        setTimeout(() => {
+          setLoadingMovies((prev) => [...prev, updates[i]]);
+          setLoadingPercentage(Math.min((i + 1) * (100 / updates.length), 100));
+        }, i * 500); // Adjust delay for updates
+      }
+
       return result;
     } catch (error) {
       console.error("Error:", error);
@@ -54,23 +66,25 @@ function App() {
 
   const handleGenerate = async () => {
     setLoading(true);
+    setLoadingMovies([]);
+    setLoadingPercentage(0);
     const description = await getPosterDescription();
     if (!description || !description.prompt) {
-      alert("failed to get description.");
+      alert("Failed to get description.");
       setLoading(false);
       return;
     }
 
     const FAL_KEY = process.env.REACT_APP_FAL_KEY;
     fal.config({
-      credentials: FAL_KEY
+      credentials: FAL_KEY,
     });
 
     const result = await fal.subscribe("fal-ai/flux/dev", {
       input: {
-        "prompt": description.prompt,
-        "num_images": 1,
-        "image_size": "portrait_4_3"
+        prompt: description.prompt,
+        num_images: 1,
+        image_size: "portrait_4_3",
       },
       logs: true,
       onQueueUpdate: (update) => {
@@ -86,9 +100,9 @@ function App() {
       });
       setPostersToDisplay(posters);
       setCurrentIndex(0);
-
     }
     setLoading(false);
+    setLoadingPercentage(100);
   };
 
   const handleNext = () => {
@@ -106,29 +120,39 @@ function App() {
   useEffect(() => {
     if (postersToDisplay.length > 0 && posterRef.current) {
       const poster = posterRef.current;
-      const posterTop = poster.getBoundingClientRect().top + window.scrollY;  // Top of the poster relative to the document
-      const windowHeight = window.innerHeight;  // Height of the visible area
-      const posterHeight = poster.offsetHeight;  // Actual height of the poster image
-      const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;  // Position to scroll to center the poster
-      
+      const posterTop = poster.getBoundingClientRect().top + window.scrollY;
+      const windowHeight = window.innerHeight;
+      const posterHeight = poster.offsetHeight;
+      const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;
+
       window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
-  }, [postersToDisplay, currentIndex]);  // Trigger this when posters or currentIndex change  
+  }, [postersToDisplay, currentIndex]);
 
   return (
     <div className="app">
       <header className="app-header">Poster Stormer</header>
       <div className="app-content">
         <div className="input-section">
-          <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange}/>
-          <AdditionalOptions setNumberOfPosters={setNumberOfPosters} onGenreChange={handleGenreChange}/>
-          <button onClick={handleGenerate} disabled={!titleValue || !plotValue}>Generate</button>
+          <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange} />
+          <AdditionalOptions setNumberOfPosters={setNumberOfPosters} onGenreChange={handleGenreChange} />
+          <button onClick={handleGenerate} disabled={!titleValue || !plotValue}>
+            Generate
+          </button>
         </div>
 
         {loading && (
-          <div className="progress-bar-container">
-            <div className="progress-bar"></div>
-          </div>
+          <>
+            <div className="progress-bar-container">
+              <div className="progress-bar" style={{ width: `${loadingPercentage}%` }}></div>
+              <div className="progress-text">{loadingPercentage}%</div>
+            </div>
+            <ul className="loading-movies">
+              {loadingMovies.map((movie, index) => (
+                <li key={index}>{movie}</li>
+              ))}
+            </ul>
+          </>
         )}
 
         <div className="poster-display">
@@ -141,7 +165,7 @@ function App() {
             posterRef={posterRef}
           />
         </div>
-      </div>           
+      </div>
     </div>
   );
 }
