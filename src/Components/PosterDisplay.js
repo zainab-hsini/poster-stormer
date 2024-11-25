@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-function PosterDisplay({ poster, onNext, onPrev, canNext, canPrev, posterRef }) {
+function PosterDisplay({ poster, posterRef }) {
   
   // This function will handle the scrolling logic once the image is loaded
   const handleImageLoad = () => {
@@ -30,12 +30,9 @@ function PosterDisplay({ poster, onNext, onPrev, canNext, canPrev, posterRef }) 
       ) : (
         <p>No posters to display. Please generate some!</p>
       )}
-      <div className="navigation">
-        <button onClick={onPrev} disabled={!canPrev}>&lt; Previous</button>
-        <button onClick={onNext} disabled={!canNext}>Next &gt;</button>
-      </div>
     </div>
   );
 }
 
 export default PosterDisplay;
+

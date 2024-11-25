@@ -105,18 +105,6 @@ function App() {
     setLoadingPercentage(100);
   };
 
-  const handleNext = () => {
-    if (currentIndex < postersToDisplay.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-
   useEffect(() => {
     if (postersToDisplay.length > 0 && posterRef.current) {
       const poster = posterRef.current;
@@ -158,10 +146,6 @@ function App() {
         <div className="poster-display">
           <PosterDisplay
             poster={postersToDisplay[currentIndex]}
-            onNext={handleNext}
-            onPrev={handlePrev}
-            canNext={currentIndex < postersToDisplay.length - 1}
-            canPrev={currentIndex > 0}
             posterRef={posterRef}
           />
         </div>
