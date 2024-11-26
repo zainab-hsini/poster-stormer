@@ -49,7 +49,7 @@ function App() {
           plot: plotValue,
           genre: genreValue,
           style: styleValue,
-          isRetro: false,
+          isRetro: isRetroValue,
         }),
       });
 
@@ -190,7 +190,8 @@ function App() {
             <AdditionalOptions 
               onGenreChange={handleGenreChange}
               onStyleChange={handleStyleChange}
-              onRetroChange={(value) => console.log(`Retro selected: ${value}`)}
+              // onRetroChange={(value) => console.log(`Retro selected: ${value}`)}
+              onRetroChange={handleRetroChange}
             />
             <Button
               mt={4}
