@@ -12,17 +12,7 @@ function PosterDisplay({ poster, posterRef }) {
   };
 
   return (
-    <Box
-      ref={posterRef}
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      textAlign="center"
-      h="100%"
-      w="100%"
-      mt={8} // Add margin for spacing
-    >
+    <VStack align="center" p={9} bg="primary.50" borderRadius="md" boxShadow="sm">
       {poster ? (
         <Box textAlign="center">
           <Image

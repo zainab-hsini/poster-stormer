@@ -115,9 +115,9 @@ function App() {
 
     const result = await fal.subscribe("fal-ai/flux/dev", {
       input: {
-        "prompt": description.prompt,
-        "num_images": 1,
-        "image_size": "portrait_4_3"
+        prompt: description.prompt,
+        num_images: 3,
+        image_size: "portrait_4_3",
       },
       logs: true,
       onQueueUpdate: (update) => {
