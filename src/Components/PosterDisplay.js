@@ -38,7 +38,7 @@ function PosterDisplay({ poster, posterRef }) {
           {poster.title && <Text mt={4} fontSize="xl">{poster.title}</Text>}
         </Box>
       ) : (
-        <Text fontSize="lg">No posters to display. Please generate some!</Text>
+        <Text fontSize="lg" color="brand.darkGray">No posters to display. Please generate some!</Text>
       )}
     </Box>
   );

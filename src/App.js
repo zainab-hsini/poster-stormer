@@ -123,18 +123,6 @@ function App() {
     setLoadingPercentage(100);
   };
 
-  // useEffect(() => {
-  //   if (postersToDisplay.length > 0 && posterRef.current) {
-  //     const poster = posterRef.current;
-  //     const posterTop = poster.getBoundingClientRect().top + window.scrollY;
-  //     const windowHeight = window.innerHeight;
-  //     const posterHeight = poster.offsetHeight;
-  //     const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;
-
-  //     window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-  //   }
-  // }, [postersToDisplay, currentIndex]);
-
   return (
     <Box bg="brand.secondary" minH="100vh" color="brand.lightGray">
       {/* Header */}
