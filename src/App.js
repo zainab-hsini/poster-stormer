@@ -218,8 +218,6 @@ function App() {
                 sentences={[
                   "Generating Prompt...",
                   "This might take a while, but we promise it's worth the wait!",
-                  "Sorry I'm kinda wishing that we hadn't created such a large database now...",
-                  "I now understand why these people ask for donations 😭",
                   "Finding the best matches for your movie plot...",
                   "Hang tight, we're creating something amazing for you!"
                 ]}
