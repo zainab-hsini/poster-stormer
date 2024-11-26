@@ -64,7 +64,7 @@ function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
             Decade:
             <input type="text" placeholder="e.g., 1980s" />
           </label>
-          <label>
+          {/* <label>
             # of posters:
             <input
               type="number"
@@ -72,7 +72,7 @@ function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
               max="10"
               onChange={(e) => setNumberOfPosters(e.target.value)}
             />
-          </label>
+          </label> */}
           <label>
             Style:
             <input type="text" placeholder="e.g., Retro" />
