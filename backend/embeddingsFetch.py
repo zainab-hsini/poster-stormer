@@ -107,6 +107,8 @@ def get_filtered_ids(query: MovieQuery):
 # Endpoint to find similar movies
 @app.post("/generate_prompt")
 async def generate_prompt(query: MovieQuery):
+    
+    print(f"Received Query: {query}")
     if not query.plot or query.plot.strip() == "" or not query.title or query.title.strip() == "":
         raise HTTPException(status_code=400, detail="Your title or plot description cannot be empty.")
     
@@ -171,20 +173,23 @@ async def generate_prompt(query: MovieQuery):
     
     # Create prompt for Flux API
     if query.style == "Illustration (Animated)":
+        print("Selected Style:", query.style)
         prompt = f"Create an image (no text) for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that is in a flat-image illustration style."
         
         # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results 
         # prompt = f"Create a poster thats closest to the posters for these movies: {top_movies_description}. Generate a poster that is in a style of flat-image illustration style. The text {query.title} must be clearly visible as the title."
     elif query.style == "Realistic Photography":
+        print("Selected Style:", query.style)
         prompt = f"Create an image (no text) that prominently features a close-up of the face of main subject for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that stylistically resembles that of the similar movies."
         
     else:
+        print("Selected Style:", query.style)
         prompt = f"Create an image (no text) for the poster for a movie with this plot: {query.plot}. The top 5 closest movies are {top_movies_description}. Generate a poster that stylistically resembles that of the similar movies."
         
         # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results
         # prompt = f"Create a poster that's closest to the posters for these movies: {top_movies_description}. The text '{query.title}' must be clearly visible as the title."
     
-    print(f"Generated Prompt: {prompt}")
+    print(f"Queried Style: {query.style}\nGenerated Prompt: {prompt}")
     
     userInputCollection.insert_one({
         "title": query.title,

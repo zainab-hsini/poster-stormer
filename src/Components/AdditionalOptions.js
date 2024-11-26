@@ -72,13 +72,16 @@ function AdditionalOptions({ setNumberOfPosters, onGenreChange, onStyleChange, o
         </Text>
         <Select
           placeholder="Select Style"
-          onChange={(e) => onStyleChange(e.target.value)}
+          onChange={(e) => {
+            console.log("Style Selected:", e.target.value); // Debugging log
+            onStyleChange(e.target.value);
+          }}
           focusBorderColor="brand.primary"
           color="gray.700"
         >
-          <option value="3d">3D Digital Art</option>
-          <option value="photo">Realistic Photography</option>
-          <option value="illustration">Illustration (Animated)</option>
+          <option value="3D Digital Art">3D Digital Art</option>
+          <option value="Realistic Photography">Realistic Photography</option>
+          <option value="Illustration (Animated)">Illustration (Animated)</option>
         </Select>
       </Box>
 
@@ -88,13 +91,16 @@ function AdditionalOptions({ setNumberOfPosters, onGenreChange, onStyleChange, o
           Make it Retro:
         </Text>
         <Select
-          placeholder="Yes/No"
-          onChange={(e) => onRetroChange(e.target.value)}
+          defaultValue="False"
+          onChange={(e) => {
+            console.log("Raw Retro Value from Dropdown:", e.target.value); // Debugging log
+            onRetroChange(e.target.value); // Pass raw value
+          }}
           focusBorderColor="brand.primary"
           color="gray.700"
         >
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
+          <option value="False">No</option>
+          <option value="True">Yes</option>
         </Select>
       </Box>
     </VStack>

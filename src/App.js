@@ -5,6 +5,7 @@ import PromptInput from './Components/PromptInput';
 import AdditionalOptions from './Components/AdditionalOptions';
 import PosterDisplay from './Components/PosterDisplay';
 import { fal } from "@fal-ai/client";
+import TypingAnimation from './Components/TypingAnimation';
 
 function App() {
   const [numberOfPosters, setNumberOfPosters] = useState(0);
@@ -14,7 +15,7 @@ function App() {
   const [titleValue, setTitleValue] = useState('');
   const [genreValue, setGenreValue] = useState('');
   const [styleValue, setStyleValue] = useState('');
-  const [isRetroValue, setIsRetroValue] = useState('');
+  const [isRetroValue, setIsRetroValue] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [loadingPercentage, setLoadingPercentage] = useState(0);
@@ -31,14 +32,25 @@ function App() {
     setGenreValue(value);
   };
   const handleStyleChange = (value) => {
+    console.log("Style value in App.js:", value);
     setStyleValue(value);
   };
   const handleRetroChange = (value) => {
-    setIsRetroValue(value === "yes");
+    const isRetro = value === "True"; // Convert string to boolean
+    console.log("Retro value in App.js (converted):", isRetro);
+    setIsRetroValue(isRetro);
   };
 
   const getPosterDescription = async () => {
     try {
+      console.log("Sending to API:", {
+        title: titleValue,
+        plot: plotValue,
+        genre: genreValue,
+        style: styleValue,
+        isRetro: isRetroValue,
+      });
+
       const response = await fetch("http://127.0.0.1:8000/generate_prompt", {
         method: "POST",
         headers: {
@@ -55,6 +67,8 @@ function App() {
 
       if (!response.ok) throw new Error("Failed to get poster description");
       const result = await response.json();
+      
+      console.log("Response from API:", result);
 
       // Handle loading updates
       const updates = result.loadingUpdates || [];
@@ -76,6 +90,8 @@ function App() {
     setLoadingMovies([]);
     setLoadingPercentage(0);
 
+    setLoadingPercentage(null);
+
     const description = await getPosterDescription();
     if (!description || !description.prompt) {
       alert("Failed to get description.");
@@ -87,7 +103,8 @@ function App() {
     fal.config({
       credentials: FAL_KEY,
     });
-
+    
+    // Start the loading bar after the prompt has been generated
     let progress = 0; // Initialize progress
     const interval = setInterval(() => {
       if (progress < 90) {
@@ -192,17 +209,34 @@ function App() {
           </Box>
         </HStack>
 
-        {/* Loading Bar */}
+        {/* Loading Section */}
         {loading && (
           <Box w="full" maxW="1000px" px={6}>
-            <Progress
-              value={loadingPercentage}
-              size="lg"
-              colorScheme="red"
-              borderRadius="md"
-              isAnimated
-              hasStripe
-            />
+            {/* To display "Generating Prompt" animation before the prompt generates */}
+            {loadingPercentage === null ? (
+              <TypingAnimation
+                sentences={[
+                  "Generating Prompt...",
+                  "This might take a while, but we promise it's worth the wait!",
+                  "Sorry I'm kinda wishing that we hadn't created such a large database now...",
+                  "I now understand why these people ask for donations 😭",
+                  "Finding the best matches for your movie plot...",
+                  "Hang tight, we're creating something amazing for you!"
+                ]}
+                typingSpeed={100} // Adjust typing speed
+                pauseAfterTyping={1000} // Sentence stays visible for 1.5 seconds after typing
+                delayBetweenSentences={1500} // Pause for 2 seconds before typing the next sentence
+              />
+            ) : (
+              <Progress
+                value={loadingPercentage}
+                size="lg"
+                colorScheme="red"
+                borderRadius="md"
+                isAnimated
+                hasStripe
+              />
+            )}
           </Box>
         )}
 
@@ -223,8 +257,8 @@ function App() {
           {loading ? (
             <>
               <Progress value={loadingPercentage} size="lg" colorScheme="red" />
-              <Text mt={4}>Generating Poster...</Text>
-              <Text mt={2}>Loading movies: {loadingMovies.join(", ")}</Text>
+              {/* <Text mt={4}>Generating Poster...</Text> */}
+              <Text mt={4}>Loading movies: {loadingMovies.join(", ")}</Text>
             </>
           ) : (
             <PosterDisplay
