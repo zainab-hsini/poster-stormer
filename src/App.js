@@ -13,6 +13,9 @@ function App() {
   const [plotValue, setPlotValue] = useState('');
   const [titleValue, setTitleValue] = useState('');
   const [genreValue, setGenreValue] = useState('');
+  const [styleValue, setStyleValue] = useState('');
+  const [isRetroValue, setIsRetroValue] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [loadingPercentage, setLoadingPercentage] = useState(0);
   const [loadingMovies, setLoadingMovies] = useState([]);
@@ -27,6 +30,12 @@ function App() {
   const handleGenreChange = (value) => {
     setGenreValue(value);
   };
+  const handleStyleChange = (value) => {
+    setStyleValue(value);
+  };
+  const handleRetroChange = (value) => {
+    setIsRetroValue(value === "yes");
+  };
 
   const getPosterDescription = async () => {
     try {
@@ -39,7 +48,7 @@ function App() {
           title: titleValue,
           plot: plotValue,
           genre: genreValue,
-          style: "Illustration (Animated)",
+          style: styleValue,
           isRetro: false,
         }),
       });
@@ -180,7 +189,7 @@ function App() {
           <Box bg="brand.lightGray" p={6} borderRadius="md" boxShadow="lg" w="full" maxW="800px">
             <AdditionalOptions 
               onGenreChange={handleGenreChange}
-              onStyleChange={(value) => console.log(`Style selected: ${value}`)}
+              onStyleChange={handleStyleChange}
               onRetroChange={(value) => console.log(`Retro selected: ${value}`)}
             />
             <Button
@@ -193,9 +202,10 @@ function App() {
             </Button>
           </Box>
         </HStack>
+
         {/* Loading Bar */}
         {loading && (
-          <Box w="full" maxW="840px" px={6}>
+          <Box w="full" maxW="1000px" px={6}>
             <Progress
               value={loadingPercentage}
               size="lg"
@@ -214,8 +224,8 @@ function App() {
           borderRadius="md" 
           boxShadow="lg" 
           w="full" 
-          maxW="800px" 
-          minH="800px" 
+          maxW="1000px" 
+          minH="1000px" 
           display="flex" 
           justifyContent="center" 
           alignItems="center"
