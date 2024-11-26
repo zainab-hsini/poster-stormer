@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Input, Textarea } from "@chakra-ui/react";
+import { Box, Input, Textarea, Text } from "@chakra-ui/react";
 
 function PromptInput({onPlotChange, onTitleChange}) {
   const handlePlotChange = (event) => {
@@ -12,6 +12,9 @@ function PromptInput({onPlotChange, onTitleChange}) {
   
   return (
     <Box>
+      <Text fontSize="lg" mb={2} fontWeight="semibold" color="black">
+          Title:
+      </Text>
       <Input
         placeholder="Enter the Movie Title"
         mb={4}
@@ -19,9 +22,12 @@ function PromptInput({onPlotChange, onTitleChange}) {
         focusBorderColor="brand.primary"
         color="gray.700"
       />
+      <Text fontSize="lg" mb={2} fontWeight="semibold" color="black">
+          Plot of Your Movie:
+      </Text>
       <Textarea
         placeholder="Enter the Plot of the Movie"
-        rows={5}
+        rows={7}
         onChange={(e) => onPlotChange(e.target.value)}
         focusBorderColor="brand.primary"
         color="gray.700"

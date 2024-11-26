@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Select, Box } from "@chakra-ui/react";
+import { Select, Box, Text, VStack } from "@chakra-ui/react";
 import axios from "axios";
 
 
-function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
+function AdditionalOptions({ setNumberOfPosters, onGenreChange, onStyleChange, onRetroChange }) {
   const [genres, setGenres] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,23 +42,62 @@ function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
     };
 
     fetchGenres();
-  }, []);
+  }, [onGenreChange]);
 
   return (
-    <Box mt={4}>
-      <Select
-        placeholder="Select Genre"
-        onChange={(e) => onGenreChange(e.target.value)}
-        focusBorderColor="brand.primary"
-        color="gray.700"
-      >
-        {genres.map((genre) => (
-          <option key={genre} value={genre}>
-            {genre}
-          </option>
-        ))}
-      </Select>
-    </Box>
+    <VStack spacing={4} align="stretch">
+      {/* Genre Dropdown */}
+      <Box>
+        <Text fontSize="lg" mb={2} fontWeight="semibold" color="black">
+          Genre:
+        </Text>
+        <Select
+          placeholder="Select Genre"
+          onChange={(e) => onGenreChange(e.target.value)}
+          focusBorderColor="brand.primary"
+          color="gray.700"
+        >
+          {genres.map((genre) => (
+            <option key={genre} value={genre}>
+              {genre}
+            </option>
+          ))}
+        </Select>
+      </Box>
+
+      {/* Poster Style Dropdown */}
+      <Box>
+        <Text fontSize="lg" mb={2} fontWeight="semibold" color="black">
+          Poster Style:
+        </Text>
+        <Select
+          placeholder="Select Style"
+          onChange={(e) => onStyleChange(e.target.value)}
+          focusBorderColor="brand.primary"
+          color="gray.700"
+        >
+          <option value="3d">3D Digital Art</option>
+          <option value="photo">Realistic Photography</option>
+          <option value="illustration">Illustration (Animated)</option>
+        </Select>
+      </Box>
+
+      {/* Make it Retro Dropdown */}
+      <Box>
+        <Text fontSize="lg" mb={2} fontWeight="semibold" color="black">
+          Make it Retro:
+        </Text>
+        <Select
+          placeholder="Yes/No"
+          onChange={(e) => onRetroChange(e.target.value)}
+          focusBorderColor="brand.primary"
+          color="gray.700"
+        >
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </Select>
+      </Box>
+    </VStack>
   );
 }
 

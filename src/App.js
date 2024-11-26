@@ -101,7 +101,7 @@ function App() {
       },
     });
 
-    // clearInterval(invertal); // Stop the interval once the API call is done
+    clearInterval(interval); // Stop the interval once the API call is done
 
     if (result.data && result.data.images && result.data.images.length) {
       const posters = result.data.images.map((item) => {
@@ -148,7 +148,7 @@ function App() {
           left="0"
           w="100%"
           h="100%"
-          bg="rgba(0, 0, 0, 0.6)" // Black overlay with reduced opacity
+          bg="rgba(0, 0, 0, 0.8)" // Black overlay with reduced opacity
           zIndex="1"
         />
         {/* Logo */}
@@ -164,19 +164,35 @@ function App() {
       {/* Main Content */}
       <VStack spacing={6} mt={8} px={6}>
         {/* Input Section */}
-        <Box bg="brand.lightGray" p={6} borderRadius="md" boxShadow="lg" w="full" maxW="800px">
-          <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange} />
-          <AdditionalOptions setNumberOfPosters={setNumberOfPosters} onGenreChange={handleGenreChange} />
-          <Button
-            mt={4}
-            colorScheme="red"
-            onClick={handleGenerate}
-            isDisabled={!titleValue || !plotValue}
-          >
-            Generate
-          </Button>
-        </Box>
-
+        <HStack
+          spacing={8}
+          align="stretch"
+          w="full"
+          maxW="1000px"
+          bg="brand.lightGray"
+          p={6}
+          borderRadius="md"
+          boxShadow="lg"
+        >
+          <Box bg="brand.lightGray" p={6} borderRadius="md" boxShadow="lg" w="full" maxW="800px">
+            <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange} />
+          </Box>
+          <Box bg="brand.lightGray" p={6} borderRadius="md" boxShadow="lg" w="full" maxW="800px">
+            <AdditionalOptions 
+              onGenreChange={handleGenreChange}
+              onStyleChange={(value) => console.log(`Style selected: ${value}`)}
+              onRetroChange={(value) => console.log(`Retro selected: ${value}`)}
+            />
+            <Button
+              mt={4}
+              colorScheme="red"
+              onClick={handleGenerate}
+              isDisabled={!titleValue || !plotValue}
+            >
+              Generate
+            </Button>
+          </Box>
+        </HStack>
         {/* Loading Bar */}
         {loading && (
           <Box w="full" maxW="840px" px={6}>
