@@ -6,12 +6,13 @@ function PosterDisplay({ poster, posterRef }) {
   const handleImageLoad = () => {
     if (posterRef && posterRef.current) {
       const posterTop = posterRef.current.getBoundingClientRect().top + window.scrollY;
-      const windowHeight = window.innerHeight;
-      const posterHeight = posterRef.current.offsetHeight;
-      const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;
+      const offset = 200;
+      // const windowHeight = window.innerHeight;
+      // const posterHeight = posterRef.current.offsetHeight;
+      // const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;
 
       // Scroll to the calculated position with smooth behavior
-      window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+      window.scrollTo({ top: posterTop - offset, behavior: 'smooth' });
     }
   };
 

@@ -105,22 +105,23 @@ function App() {
     setLoadingPercentage(100);
   };
 
-  useEffect(() => {
-    if (postersToDisplay.length > 0 && posterRef.current) {
-      const poster = posterRef.current;
-      const posterTop = poster.getBoundingClientRect().top + window.scrollY;
-      const windowHeight = window.innerHeight;
-      const posterHeight = poster.offsetHeight;
-      const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;
+  // useEffect(() => {
+  //   if (postersToDisplay.length > 0 && posterRef.current) {
+  //     const poster = posterRef.current;
+  //     const posterTop = poster.getBoundingClientRect().top + window.scrollY;
+  //     const windowHeight = window.innerHeight;
+  //     const posterHeight = poster.offsetHeight;
+  //     const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;
 
-      window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-    }
-  }, [postersToDisplay, currentIndex]);
+  //     window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+  //   }
+  // }, [postersToDisplay, currentIndex]);
 
   return (
     <div className="app">
       <header className="app-header">Poster Stormer</header>
       <div className="app-content">
+        {/* Input Section */}
         <div className="input-section">
           <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange} />
           <AdditionalOptions setNumberOfPosters={setNumberOfPosters} onGenreChange={handleGenreChange} />
@@ -129,21 +130,21 @@ function App() {
           </button>
         </div>
 
-        {loading && (
-          <>
-            <div className="progress-bar-container">
-              <div className="progress-bar" style={{ width: `${loadingPercentage}%` }}></div>
-              <div className="progress-text">{loadingPercentage}%</div>
-            </div>
-            <ul className="loading-movies">
-              {loadingMovies.map((movie, index) => (
-                <li key={index}>{movie}</li>
-              ))}
-            </ul>
-          </>
-        )}
-
-        <div className="poster-display">
+        {/* Poster Display Section */}
+        <div className="poster-container">
+          {loading && (
+            <>
+              <div className="progress-bar-container">
+                <div className="progress-bar" style={{ width: `${loadingPercentage}%` }}></div>
+                <div className="progress-text">{loadingPercentage}%</div>
+              </div>
+              <ul className="loading-movies">
+                {loadingMovies.map((movie, index) => (
+                  <li key={index}>{movie}</li>
+                ))}
+              </ul>
+            </>
+          )}
           <PosterDisplay
             poster={postersToDisplay[currentIndex]}
             posterRef={posterRef}
