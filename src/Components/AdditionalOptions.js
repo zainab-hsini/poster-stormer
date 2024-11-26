@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Select, Box } from "@chakra-ui/react";
 import axios from "axios";
+
 
 function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
   const [genres, setGenres] = useState([]);
@@ -43,42 +45,20 @@ function AdditionalOptions({ setNumberOfPosters, onGenreChange }) {
   }, []);
 
   return (
-    <div className="additional-options">
-        <div className="optional-note">Add more details to your prompt with the add-ons below!</div>
-        <div className="options">
-          <label>
-            Genre:
-            {isLoading ? (
-              <span>Loading...</span>
-            ) : (
-              <select onChange={handleGenreSelection}>
-                {genres.map((genre, index) => (
-                  <option key={index} value={genre}>
-                    {genre}
-                  </option>
-                ))}
-              </select>
-            )}
-          </label>
-          <label>
-            Decade:
-            <input type="text" placeholder="e.g., 1980s" />
-          </label>
-          {/* <label>
-            # of posters:
-            <input
-              type="number"
-              min="1"
-              max="10"
-              onChange={(e) => setNumberOfPosters(e.target.value)}
-            />
-          </label> */}
-          <label>
-            Style:
-            <input type="text" placeholder="e.g., Retro" />
-          </label>
-        </div>
-    </div>
+    <Box mt={4}>
+      <Select
+        placeholder="Select Genre"
+        onChange={(e) => onGenreChange(e.target.value)}
+        focusBorderColor="brand.primary"
+        color="gray.700"
+      >
+        {genres.map((genre) => (
+          <option key={genre} value={genre}>
+            {genre}
+          </option>
+        ))}
+      </Select>
+    </Box>
   );
 }
 

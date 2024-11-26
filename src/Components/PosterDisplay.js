@@ -1,39 +1,47 @@
 import React, { useEffect } from 'react';
+import { Box, Image, Text } from '@chakra-ui/react';
 
 function PosterDisplay({ poster, posterRef }) {
-  
-  // This function will handle the scrolling logic once the image is loaded
+  // Handle scrolling logic once the image is loaded
   const handleImageLoad = () => {
     if (posterRef && posterRef.current) {
       const posterTop = posterRef.current.getBoundingClientRect().top + window.scrollY;
-      const offset = 200;
-      // const windowHeight = window.innerHeight;
-      // const posterHeight = posterRef.current.offsetHeight;
-      // const scrollPosition = posterTop - windowHeight / 2 + posterHeight / 2;
-
-      // Scroll to the calculated position with smooth behavior
+      const offset = 150;
       window.scrollTo({ top: posterTop - offset, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="poster-display" ref={posterRef}>
+    <Box
+      ref={posterRef}
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      textAlign="center"
+      h="100%"
+      w="100%"
+      mt={8} // Add margin for spacing
+    >
       {poster ? (
-        <div className="poster-placeholder">
-          <img 
-            src={poster.image} 
-            alt={poster.title} 
-            style={{ width: '100%', height: 'auto' }} 
-            onLoad={handleImageLoad}  // Trigger scroll after image is loaded
+        <Box textAlign="center">
+          <Image
+            src={poster.image}
+            alt={poster.title || "Generated Poster"}
+            onLoad={handleImageLoad} // Trigger scroll after image is loaded
+            maxW="90%" // Adjust width to make the poster larger
+            maxH="90vh" // Constrain height to avoid overflow
+            objectFit="contain"
+            borderRadius="md" // Optional: Add rounded corners
+            boxShadow="xl" // Optional: Add a shadow for better aesthetics
           />
-          <p>{poster.title}</p>
-        </div>
+          {poster.title && <Text mt={4} fontSize="xl">{poster.title}</Text>}
+        </Box>
       ) : (
-        <p>No posters to display. Please generate some!</p>
+        <Text fontSize="lg">No posters to display. Please generate some!</Text>
       )}
-    </div>
+    </Box>
   );
 }
 
 export default PosterDisplay;
-

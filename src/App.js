@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './App.css';
+import React, { useState, useRef } from 'react';
+import { Box, Heading, Button, VStack, HStack, Progress, Text, Center, Image } from '@chakra-ui/react';
+import "./App.css";
 import PromptInput from './Components/PromptInput';
-import './Components/PromptInput.css';
 import AdditionalOptions from './Components/AdditionalOptions';
-import './Components/AdditionalOptions.css';
 import PosterDisplay from './Components/PosterDisplay';
-import './Components/PosterDisplay.css';
 import { fal } from "@fal-ai/client";
 
 function App() {
@@ -68,6 +66,7 @@ function App() {
     setLoading(true);
     setLoadingMovies([]);
     setLoadingPercentage(0);
+
     const description = await getPosterDescription();
     if (!description || !description.prompt) {
       alert("Failed to get description.");
@@ -80,10 +79,18 @@ function App() {
       credentials: FAL_KEY,
     });
 
+    let progress = 0; // Initialize progress
+    const interval = setInterval(() => {
+      if (progress < 90) {
+        progress += 10; // Increment progress by 10%
+        setLoadingPercentage(progress);
+      }
+    }, 300); // Update every 300ms
+
     const result = await fal.subscribe("fal-ai/flux/dev", {
       input: {
         prompt: description.prompt,
-        num_images: 1,
+        num_images: 3,
         image_size: "portrait_4_3",
       },
       logs: true,
@@ -93,6 +100,8 @@ function App() {
         }
       },
     });
+
+    // clearInterval(invertal); // Stop the interval once the API call is done
 
     if (result.data && result.data.images && result.data.images.length) {
       const posters = result.data.images.map((item) => {
@@ -118,40 +127,119 @@ function App() {
   // }, [postersToDisplay, currentIndex]);
 
   return (
-    <div className="app">
-      <header className="app-header">Poster Stormer</header>
-      <div className="app-content">
+    <Box bg="brand.secondary" minH="100vh" color="brand.lightGray">
+      {/* Header */}
+      <Box
+        bgImage="url('/assets/posterStormerBanner.png')" // Update with the correct path to the backdrop image
+        bgSize="cover"
+        bgPosition="center"
+        w="100%"
+        h="500px" // Adjust the height as per your design
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        mb={8}
+        position="relative"
+      >
+        {/* Overlay */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          w="100%"
+          h="100%"
+          bg="rgba(0, 0, 0, 0.6)" // Black overlay with reduced opacity
+          zIndex="1"
+        />
+        {/* Logo */}
+        <Image
+          src="/assets/poster stormer logo.png" // Update with the correct path to the logo image
+          alt="Poster Stormer"
+          maxH="150px"
+          objectFit="contain"
+          zIndex="2"
+        />
+      </Box>
+
+      {/* Main Content */}
+      <VStack spacing={6} mt={8} px={6}>
         {/* Input Section */}
-        <div className="input-section">
+        <Box bg="brand.lightGray" p={6} borderRadius="md" boxShadow="lg" w="full" maxW="800px">
           <PromptInput onPlotChange={handlePlotChange} onTitleChange={handleTitleChange} />
           <AdditionalOptions setNumberOfPosters={setNumberOfPosters} onGenreChange={handleGenreChange} />
-          <button onClick={handleGenerate} disabled={!titleValue || !plotValue}>
+          <Button
+            mt={4}
+            colorScheme="red"
+            onClick={handleGenerate}
+            isDisabled={!titleValue || !plotValue}
+          >
             Generate
-          </button>
-        </div>
+          </Button>
+        </Box>
+
+        {/* Loading Bar */}
+        {loading && (
+          <Box w="full" maxW="840px" px={6}>
+            <Progress
+              value={loadingPercentage}
+              size="lg"
+              colorScheme="red"
+              borderRadius="md"
+              isAnimated
+              hasStripe
+            />
+          </Box>
+        )}
 
         {/* Poster Display Section */}
-        <div className="poster-container">
-          {loading && (
+        <Box 
+          bg="brand.lightGray" 
+          p={6} 
+          borderRadius="md" 
+          boxShadow="lg" 
+          w="full" 
+          maxW="800px" 
+          minH="800px" 
+          display="flex" 
+          justifyContent="center" 
+          alignItems="center"
+          position="relative"
+        >
+          {loading ? (
             <>
-              <div className="progress-bar-container">
-                <div className="progress-bar" style={{ width: `${loadingPercentage}%` }}></div>
-                <div className="progress-text">{loadingPercentage}%</div>
-              </div>
-              <ul className="loading-movies">
-                {loadingMovies.map((movie, index) => (
-                  <li key={index}>{movie}</li>
-                ))}
-              </ul>
+              <Progress value={loadingPercentage} size="lg" colorScheme="red" />
+              <Text mt={4}>Generating Poster...</Text>
+              <Text mt={2}>Loading movies: {loadingMovies.join(", ")}</Text>
             </>
+          ) : (
+            <PosterDisplay
+              poster={postersToDisplay[currentIndex]}
+              posterRef={posterRef}
+            />
           )}
-          <PosterDisplay
-            poster={postersToDisplay[currentIndex]}
-            posterRef={posterRef}
-          />
-        </div>
-      </div>
-    </div>
+        </Box>
+
+        {/* Navigation Buttons */}
+        {postersToDisplay.length > 0 && (
+          <HStack spacing={4}>
+            <Button
+              onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}
+              isDisabled={currentIndex === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              onClick={() =>
+                setCurrentIndex((prev) => Math.min(prev + 1, postersToDisplay.length - 1))
+              }
+              isDisabled={currentIndex === postersToDisplay.length - 1}
+            >
+              Next
+            </Button>
+          </HStack>
+        )}
+      </VStack>
+    </Box>
   );
 }
 
