@@ -7,7 +7,7 @@ const theme = extendTheme({
         secondary: "#000000", // Dark background
         lightGray: "#F7FAFC", // Light gray for containers
         white: "#FFFFFF", // White
-        darkGray: "A9A9A9"
+        darkGray: "#2D2D2D"
       },
     },
     fonts: {

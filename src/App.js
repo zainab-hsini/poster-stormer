@@ -178,7 +178,7 @@ function App() {
           align="stretch"
           w="full"
           maxW="1000px"
-          bg="brand.lightGray"
+          bg="rgba(256, 256, 256, 0.8)"
           p={6}
           borderRadius="md"
           boxShadow="lg"
@@ -220,7 +220,7 @@ function App() {
 
         {/* Poster Display Section */}
         <Box 
-          bg="brand.lightGray" 
+          bg="rgba(256, 256, 256, 0.8)" 
           p={6} 
           borderRadius="md" 
           boxShadow="lg" 
