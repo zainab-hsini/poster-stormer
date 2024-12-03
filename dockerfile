@@ -1,20 +1,40 @@
-# Use Python base image
-FROM python:3.9-slim
+# Backend Stage
+FROM python:3.9 AS backend
 
-# Set working directory (assuming /app, but you might have something different!)
-WORKDIR /app
+# Set working directory for backend
+WORKDIR /backend
 
-# Copy requirements file
+# Copy backend-related files
+COPY backend ./backend
 COPY requirements.txt .
 
-# Install dependencies
+# Install backend dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all backend files
-COPY . .
-
-# Expose port
+# Expose backend port
 EXPOSE 8000
 
-# Start FastAPI server (this should be exactly what you do when working locally)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command to run backend server
+CMD ["uvicorn", "backend.embeddingsFetch:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# Frontend Stage
+FROM node:18 AS frontend
+
+# Set working directory for frontend
+WORKDIR /frontend
+
+# Copy frontend-related files
+COPY package*.json ./
+COPY public ./public
+COPY src ./src
+
+# Install frontend dependencies
+RUN npm install
+
+# Expose frontend port
+EXPOSE 3000
+
+# Command to run frontend server
+CMD ["npm", "start"]
+
+# docker-compose up --build to run

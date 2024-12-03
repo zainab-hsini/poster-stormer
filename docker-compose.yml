@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    ports:
+      - "8000:8000"
+    environment:
+      - Mongo_URI=mongodb+srv://ian-chang:riL9ckwAhzHQFaut@movies.7r39n.mongodb.net/movies?retryWrites=true&w=majority&ssl=true
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_FAL_KEY=71ff3a2a-cc06-499f-afbf-d603b8fdf737:42ee72e6fd9691f2e5ce630ac19bf3e7
