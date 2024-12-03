@@ -182,7 +182,7 @@ function App() {
           spacing={8}
           align="stretch"
           w="full"
-          maxW="1000px"
+          maxW="1200px"
           bg="rgba(256, 256, 256, 0.8)"
           p={6}
           borderRadius="md"
@@ -211,7 +211,7 @@ function App() {
 
         {/* Loading Section */}
         {loading && (
-          <Box w="full" maxW="1000px" px={6}>
+          <Box w="full" maxW="1200px" px={6}>
             {/* To display "Generating Prompt" animation before the prompt generates */}
             {loadingPercentage === null ? (
               <TypingAnimation
@@ -245,7 +245,7 @@ function App() {
           borderRadius="md" 
           boxShadow="lg" 
           w="full" 
-          maxW="1000px" 
+          maxW="1200px" 
           minH="1000px" 
           display="flex" 
           justifyContent="center" 
