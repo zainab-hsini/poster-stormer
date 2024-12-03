@@ -189,7 +189,8 @@ async def generate_prompt(query: MovieQuery):
         # if we manage to train and fine tune our own image generator on the posters we have in our db, the below command might produce better results
         # prompt = f"Create a poster that's closest to the posters for these movies: {top_movies_description}. The text '{query.title}' must be clearly visible as the title."
     
-    print(f"Queried Style: {query.style}\nGenerated Prompt: {prompt}")
+    # print(f"Queried Style: {query.style}\nGenerated Prompt: {prompt}")
+    print(f"Generated Prompt: {prompt}")
     
     userInputCollection.insert_one({
         "title": query.title,
