@@ -29,7 +29,7 @@ function PosterDisplay({ poster, posterRef }) {
             src={poster.image}
             alt={poster.title || "Generated Poster"}
             onLoad={handleImageLoad} // Trigger scroll after image is loaded
-            maxW="90%" // Adjust width to make the poster larger
+            maxW="100%" // Adjust width to make the poster larger
             maxH="90vh" // Constrain height to avoid overflow
             objectFit="contain"
             borderRadius="md" // Optional: Add rounded corners
