@@ -30,7 +30,7 @@ function PosterDisplay({ poster, posterRef }) {
       ) : (
         <Text fontSize="lg" color="brand.darkGray">No posters to display. Please generate some!</Text>
       )}
-    </Box>
+    </VStack>
   );
 }
 
