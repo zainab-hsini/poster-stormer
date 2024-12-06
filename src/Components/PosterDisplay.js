@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Image, Text } from '@chakra-ui/react';
+import { Box, Image, Text, VStack } from '@chakra-ui/react';
 
 function PosterDisplay({ poster, posterRef }) {
   // Handle scrolling logic once the image is loaded
